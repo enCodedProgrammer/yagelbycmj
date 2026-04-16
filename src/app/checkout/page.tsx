@@ -7,18 +7,17 @@ import Link from "next/link";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useCountry } from "@/lib/country-context";
-import { formatPrice, countries } from "@/lib/data";
+import { formatPrice } from "@/lib/data";
 
 export default function CheckoutPage() {
   const { items, totalItems } = useCart();
-  const { country, setCountry } = useCountry();
+  const { country } = useCountry();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     address: "",
     city: "",
     postalCode: "",
-    country: country.code,
   });
 
   const total = items.reduce(
@@ -27,15 +26,10 @@ export default function CheckoutPage() {
   );
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "country") {
-      const found = countries.find((c) => c.code === value);
-      if (found) setCountry(found);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -130,18 +124,9 @@ export default function CheckoutPage() {
                 <label className="block text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
                   Shipping Country
                 </label>
-                <select
-                  name="country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground focus:outline-none focus:border-gold/50 transition-colors"
-                >
-                  {countries.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.flag} {c.name}
-                    </option>
-                  ))}
-                </select>
+                <div className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground">
+                  {country.flag} {country.name}
+                </div>
               </div>
 
               <div>

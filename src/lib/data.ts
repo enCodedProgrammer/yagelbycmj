@@ -1,3 +1,8 @@
+export interface ProductImage {
+  src: string;
+  alt: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -17,6 +22,7 @@ export interface Product {
     NGN: number;
   };
   image: string;
+  gallery: ProductImage[];
   gender: "her" | "him";
 }
 
@@ -77,6 +83,11 @@ export const products: Product[] = [
       NGN: 40000,
     },
     image: "/images/yagel-for-her.png",
+    gallery: [
+      { src: "/images/yagel-for-her.png", alt: "Yagel For Her — Front View" },
+      { src: "/images/yagel-for-her.png", alt: "Yagel For Her — Side View" },
+      { src: "/images/yagel-for-her.png", alt: "Yagel For Her — Back View" },
+    ],
     gender: "her",
   },
   {
@@ -99,6 +110,11 @@ export const products: Product[] = [
       NGN: 40000,
     },
     image: "/images/yagel-for-him.png",
+    gallery: [
+      { src: "/images/yagel-for-him.png", alt: "Yagel For Him — Front View" },
+      { src: "/images/yagel-for-him.png", alt: "Yagel For Him — Side View" },
+      { src: "/images/yagel-for-him.png", alt: "Yagel For Him — Back View" },
+    ],
     gender: "him",
   },
 ];

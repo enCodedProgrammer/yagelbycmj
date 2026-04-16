@@ -5,10 +5,11 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import CountrySelector from "@/components/layout/CountrySelector";
+import { useCountry } from "@/lib/country-context";
 
 export default function Header() {
   const { totalItems, setIsOpen } = useCart();
+  const { country } = useCountry();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -35,7 +36,9 @@ export default function Header() {
 
         {/* Right Side */}
         <div className="flex items-center gap-4">
-          <CountrySelector />
+          <span className="text-xs text-foreground/40 tracking-wide hidden sm:inline">
+            {country.flag} {country.currencySymbol}
+          </span>
           <button
             onClick={() => setIsOpen(true)}
             className="relative p-2 text-foreground/70 hover:text-gold transition-colors"

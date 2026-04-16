@@ -254,7 +254,6 @@ We currently ship within:
 
 * United Kingdom
 * United States
-* Canada
 * Nigeria
 
 ---

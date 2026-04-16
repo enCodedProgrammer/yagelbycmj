@@ -5,29 +5,39 @@ import { countries, type Country } from "./data";
 
 interface CountryContextType {
   country: Country;
-  setCountry: (country: Country) => void;
+  loading: boolean;
 }
 
 const CountryContext = createContext<CountryContextType | undefined>(undefined);
 
 export function CountryProvider({ children }: { children: ReactNode }) {
-  const [country, setCountryState] = useState<Country>(countries[0]); // Default to UK
+  const [country, setCountry] = useState<Country>(countries[0]); // Default UK
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("yagel-country");
-    if (saved) {
-      const found = countries.find((c) => c.code === saved);
-      if (found) setCountryState(found);
+    async function detectCountry() {
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        if (!res.ok) throw new Error("IP lookup failed");
+        const data = await res.json();
+        const code = data.country_code; // e.g. "GB", "US", "NG"
+        const match = countries.find((c) => c.code === code);
+        if (match) {
+          setCountry(match);
+        }
+        // If no match (user not in UK/US/NG), keep default UK
+      } catch {
+        // On error, keep default UK
+      } finally {
+        setLoading(false);
+      }
     }
+
+    detectCountry();
   }, []);
 
-  const setCountry = (c: Country) => {
-    setCountryState(c);
-    localStorage.setItem("yagel-country", c.code);
-  };
-
   return (
-    <CountryContext.Provider value={{ country, setCountry }}>
+    <CountryContext.Provider value={{ country, loading }}>
       {children}
     </CountryContext.Provider>
   );
