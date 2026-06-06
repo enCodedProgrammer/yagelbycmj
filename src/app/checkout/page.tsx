@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useCountry } from "@/lib/country-context";
 import { formatPrice } from "@/lib/data";
@@ -19,6 +19,8 @@ export default function CheckoutPage() {
     city: "",
     postalCode: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const total = items.reduce(
     (sum, item) => sum + item.prices[country.currency] * item.quantity,
@@ -34,8 +36,45 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Create Stripe checkout session
-    alert("Stripe checkout integration coming soon!");
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currency: country.currency,
+          items: items.map((item) => ({
+            productId: item.productId,
+            name: item.name,
+            image: item.image,
+            quantity: item.quantity,
+            unitPrice: item.prices[country.currency],
+          })),
+          customer: {
+            name: formData.name,
+            email: formData.email,
+            address: formData.address,
+            city: formData.city,
+            postalCode: formData.postalCode,
+            country: country.name,
+            countryCode: country.code,
+          },
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error ?? "Something went wrong. Please try again.");
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setLoading(false);
+    }
   };
 
   if (totalItems === 0) {
@@ -174,15 +213,23 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {error && (
+                <p className="text-sm text-red-400 text-center">{error}</p>
+              )}
+
               <button
                 type="submit"
-                className="w-full py-4 bg-gold text-primary-foreground text-sm tracking-[0.2em] uppercase hover:shadow-[0_0_30px_rgba(196,168,120,0.3)] transition-all duration-500 mt-4"
+                disabled={loading}
+                className="w-full py-4 bg-gold text-primary-foreground text-sm tracking-[0.2em] uppercase hover:shadow-[0_0_30px_rgba(196,168,120,0.3)] transition-all duration-500 mt-4 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Pay {formatPrice(total, country.currency)}
+                {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                {loading ? "Processing..." : `Pay ${formatPrice(total, country.currency)}`}
               </button>
 
               <p className="text-xs text-muted-foreground/60 text-center">
-                You will be redirected to Stripe for secure payment
+                {country.currency === "NGN"
+                  ? "You will be redirected to Paystack for secure payment"
+                  : "You will be redirected to Stripe for secure payment"}
               </p>
             </form>
           </motion.div>

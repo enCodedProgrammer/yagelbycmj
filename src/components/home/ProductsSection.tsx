@@ -1,7 +1,9 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
 import { products, formatPrice, type Product } from "@/lib/data";
@@ -9,13 +11,33 @@ import { useCountry } from "@/lib/country-context";
 import { FluidDynamics } from "@/components/fluid-dynamics";
 
 export default function ProductsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (!isInView || !gridRef.current) return;
+
+    const cards = gridRef.current.querySelectorAll<HTMLElement>(".product-card");
+
+    // Set initial state — off-screen to the right, invisible
+    gsap.set(cards, { x: 120, opacity: 0 });
+
+    // Stagger them in from the right
+    gsap.to(cards, {
+      x: 0,
+      opacity: 1,
+      duration: 0.9,
+      ease: "power3.out",
+      stagger: 0.18,
+    });
+  }, [isInView]);
 
   return (
     <section
       id="collection"
-      ref={ref}
+      ref={sectionRef}
       className="relative py-32 md:py-40 overflow-hidden"
     >
       {/* Background */}
@@ -23,7 +45,7 @@ export default function ProductsSection() {
 
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Section header */}
-        <div className="text-center mb-20">
+        <div ref={headerRef} className="text-center mb-20">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -44,14 +66,9 @@ export default function ProductsSection() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+        <div ref={gridRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {products.map((product, index) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              index={index}
-              isInView={isInView}
-            />
+            <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
       </div>
@@ -59,24 +76,12 @@ export default function ProductsSection() {
   );
 }
 
-function ProductCard({
-  product,
-  index,
-  isInView,
-}: {
-  product: Product;
-  index: number;
-  isInView: boolean;
-}) {
+function ProductCard({ product, index }: { product: Product; index: number }) {
   const { country } = useCountry();
   const price = product.prices[country.currency];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay: 0.3 + index * 0.2 }}
-    >
+    <div className="product-card">
       <Link href={`/product/${product.slug}`} className="group block">
         <div className="relative bg-card/50 border border-border/50 overflow-hidden backdrop-blur-sm hover:border-gold/30 transition-all duration-700">
           {/* Product image area */}
@@ -84,7 +89,7 @@ function ProductCard({
             {/* Background glow */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--gold)_0%,_transparent_60%)] opacity-[0.04] group-hover:opacity-[0.1] transition-opacity duration-700" />
 
-            {/* Fluid dynamics — scent swirling around the bottle */}
+            {/* Fluid dynamics */}
             <div className="absolute inset-0 opacity-[0.15] mix-blend-screen pointer-events-none z-[1]">
               <FluidDynamics
                 width={100}
@@ -131,7 +136,7 @@ function ProductCard({
             </div>
           </div>
 
-          {/* Name and price — minimal */}
+          {/* Name and price */}
           <div className="p-6 sm:p-8 flex items-center justify-between">
             <div>
               <h3 className="font-heading text-2xl sm:text-3xl text-foreground tracking-wide">
@@ -150,6 +155,6 @@ function ProductCard({
           </div>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

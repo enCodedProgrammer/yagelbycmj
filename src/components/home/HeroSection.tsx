@@ -2,106 +2,35 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import VaporizeTextCycle, {
   Tag,
 } from "@/components/vapour-text-effect";
-import { FluidDynamics } from "@/components/fluid-dynamics";
 
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background gradient layers */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background/90" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--gold)_0%,_transparent_70%)] opacity-[0.04]" />
+      {/* Mobile hero video — visible only on small screens */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover md:hidden"
+        src="/hero-video-mobile.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
 
-      {/* Interactive fluid dynamics — gold mist that reacts to cursor */}
-      <div className="absolute inset-0 opacity-[0.12] mix-blend-screen pointer-events-auto z-[1]">
-        <FluidDynamics
-          width={150}
-          height={150}
-          iterations={3}
-          strength={60}
-          radius={2}
-          viscosity={0.0}
-          diffusion={0.0}
-          showDensity={true}
-          showVelocity={false}
-          addDensity={true}
-          addVelocity={true}
-          animate={true}
-          circle={true}
-          resetInterval={6000}
-        />
-      </div>
+      {/* Desktop hero video — visible on md and up */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover hidden md:block"
+        src="/hero-video-desktop.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+      />
 
-      {/* Animated gold particles/lines */}
-      <div className="absolute inset-0 overflow-hidden z-[2] pointer-events-none">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-px bg-gradient-to-b from-transparent via-gold/20 to-transparent"
-            style={{
-              left: `${15 + i * 18}%`,
-              height: "40%",
-            }}
-            initial={{ y: "-40%", opacity: 0 }}
-            animate={{ y: "140%", opacity: [0, 1, 1, 0] }}
-            transition={{
-              duration: 4 + i * 0.5,
-              repeat: Infinity,
-              delay: i * 1.2,
-              ease: "linear",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Floating product images */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[3]">
-        <motion.div
-          className="absolute -left-10 md:left-[8%] top-[20%] md:top-[15%] w-32 md:w-56 opacity-20 md:opacity-30"
-          animate={{
-            y: [0, -20, 0],
-            rotate: [-5, 0, -5],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <Image
-            src="/images/yagel-for-her.png"
-            alt=""
-            width={224}
-            height={224}
-            className="w-full h-auto drop-shadow-[0_0_30px_rgba(196,168,120,0.3)]"
-          />
-        </motion.div>
-
-        <motion.div
-          className="absolute -right-10 md:right-[8%] bottom-[15%] md:bottom-[10%] w-32 md:w-56 opacity-20 md:opacity-30"
-          animate={{
-            y: [0, 20, 0],
-            rotate: [5, 0, 5],
-          }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-        >
-          <Image
-            src="/images/yagel-for-him.png"
-            alt=""
-            width={224}
-            height={224}
-            className="w-full h-auto drop-shadow-[0_0_30px_rgba(196,168,120,0.3)]"
-          />
-        </motion.div>
-      </div>
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* Content — above the fluid layer */}
       <div className="relative z-20 text-center px-6 w-full max-w-5xl mx-auto">
