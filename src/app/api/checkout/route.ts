@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+export const dynamic = "force-dynamic";
+
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!);
+}
 
 export interface CheckoutBody {
   currency: "GBP" | "USD" | "NGN";
@@ -41,6 +45,7 @@ async function handleStripe(
   customer: CheckoutBody["customer"],
   baseUrl: string
 ) {
+  const stripe = getStripe();
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
