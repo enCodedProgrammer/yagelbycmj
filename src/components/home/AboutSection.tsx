@@ -185,8 +185,8 @@ export default function AboutSection() {
   const advancePhase = useCallback(() => setPhase(phaseRef.current + 1), [setPhase]);
 
 useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (v >= 0.50 && phaseRef.current === 0) setPhase(1);
-    if (v < 0.45 && phaseRef.current > 0) setPhase(0);
+    if (v >= 0.01 && phaseRef.current === 0) setPhase(1);
+    if (v < 0.01 && phaseRef.current > 0) setPhase(0);
   });
 
   return (
@@ -195,9 +195,7 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
 
         {/* ── Static header — always visible above the circle ── */}
         <div className="absolute top-[100px] md:top-[160px] inset-x-0 flex flex-col items-center z-30 pointer-events-none">
-          <span className="text-xs tracking-[0.4em] uppercase text-gold/60 mb-3">
-            Our Story
-          </span>
+          
           <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl tracking-wide text-foreground text-center">
             Capturing Identity Through Scent
           </h2>
@@ -226,12 +224,16 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: phase >= 1 ? 1 : 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0, ease: "easeOut" }}
             className="flex flex-col justify-center z-20 px-6 md:px-0"
             style={isMobile ? { width: "100%", maxWidth: 320, marginTop: 16 } : { marginLeft: 60, width: 350, flexShrink: 0 }}
           >
             <div className="space-y-3 text-foreground/60 leading-relaxed">
+            <span className="text-xs tracking-[0.4em] uppercase text-gold/60 mb-3">
+            Our Story
+          </span>
               <div>
+                
                 {phase >= 1 && (
                   <p className="text-sm">
                     <TypewriterText

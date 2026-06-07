@@ -58,7 +58,7 @@ export default function CTASection() {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <Link
-            href="/#collection"
+            href="/collection"
             className="inline-block px-12 py-4 bg-gold text-primary-foreground text-sm tracking-[0.2em] uppercase hover:shadow-[0_0_40px_rgba(196,168,120,0.4)] transition-all duration-500"
           >
             Shop Now

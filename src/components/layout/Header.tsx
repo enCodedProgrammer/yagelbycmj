@@ -29,7 +29,7 @@ export default function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          <NavLink href="/#collection">Collection</NavLink>
+          <NavLink href="/collection">Collection</NavLink>
           <NavLink href="/#about">Our Story</NavLink>
           <NavLink href="/shipping">Shipping</NavLink>
         </nav>
@@ -82,7 +82,7 @@ export default function Header() {
           >
             <nav className="flex flex-col items-center gap-6 py-8">
               <MobileNavLink
-                href="/#collection"
+                href="/collection"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Collection

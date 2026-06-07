@@ -29,8 +29,8 @@ export default function HeroSection() {
         playsInline
       />
 
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Dark overlay — centred radial, fades to transparent at edges */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,_rgba(0,0,0,0.65)_0%,_rgba(0,0,0,0.2)_55%,_transparent_80%)]" />
 
       {/* Content — above the fluid layer */}
       <div className="relative z-20 text-center px-6 w-full max-w-5xl mx-auto">
