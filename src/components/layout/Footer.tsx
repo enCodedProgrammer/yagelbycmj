@@ -57,7 +57,12 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground">
               For inquiries and support:
             </p>
-            <p className="text-sm text-gold mt-2">hello@yagel.co.uk</p>
+            <a
+              href="mailto:thehouseofcmj@yagelbycmj.com"
+              className="text-sm text-gold mt-2 block hover:text-gold-light transition-colors"
+            >
+              thehouseofcmj@yagelbycmj.com
+            </a>
           </div>
         </div>
 
