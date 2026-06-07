@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const cartItems: { product_id: string; name: string; quantity: number; unit_price: number }[] =
       meta.cart_items ?? [];
 
-    const { data: order, error: orderError } = await supabaseAdmin
+    const { data: order, error: orderError } = await getSupabaseAdmin()
       .from("orders")
       .insert({
         customer_name: meta.customer_name,
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (cartItems.length > 0) {
-      await supabaseAdmin.from("order_items").insert(
+      await getSupabaseAdmin().from("order_items").insert(
         cartItems.map((item) => ({
           order_id: order.id,
           product_id: item.product_id,

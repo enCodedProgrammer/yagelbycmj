@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       expand: ["data.price.product"],
     });
 
-    const { data: order, error: orderError } = await supabaseAdmin
+    const { data: order, error: orderError } = await getSupabaseAdmin()
       .from("orders")
       .insert({
         customer_name: meta.customer_name,
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    await supabaseAdmin.from("order_items").insert(orderItems);
+    await getSupabaseAdmin().from("order_items").insert(orderItems);
   }
 
   return NextResponse.json({ received: true });
