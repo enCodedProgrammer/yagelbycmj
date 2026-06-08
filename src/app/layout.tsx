@@ -6,6 +6,7 @@ import { CartProvider } from "@/lib/cart-context";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
+import CustomCursor from "@/components/CustomCursor";
 
 const playfair = Playfair_Display({
   variable: "--font-heading",
@@ -42,6 +43,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
             <CartDrawer />
+            <CustomCursor />
           </CartProvider>
         </CountryProvider>
       </body>
