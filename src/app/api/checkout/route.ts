@@ -14,26 +14,28 @@ export interface CheckoutBody {
     name: string;
     image: string;
     quantity: number;
-    unitPrice: number; // in the given currency
+    unitPrice: number;
   }[];
+  deliveryFee: number; // NGN only, 0 for GBP/USD
   customer: {
     name: string;
     email: string;
     address: string;
     city: string;
     postalCode: string;
-    country: string; // e.g. "United Kingdom"
-    countryCode: string; // e.g. "GB"
+    state?: string;
+    country: string;
+    countryCode: string;
   };
 }
 
 export async function POST(req: NextRequest) {
   const body: CheckoutBody = await req.json();
-  const { currency, items, customer } = body;
+  const { currency, items, customer, deliveryFee } = body;
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
 
   if (currency === "NGN") {
-    return handlePaystack(items, customer, baseUrl);
+    return handlePaystack(items, customer, deliveryFee, baseUrl);
   }
 
   return handleStripe(currency, items, customer, baseUrl);
@@ -79,12 +81,14 @@ async function handleStripe(
 async function handlePaystack(
   items: CheckoutBody["items"],
   customer: CheckoutBody["customer"],
+  deliveryFee: number,
   baseUrl: string
 ) {
-  const totalKobo = items.reduce(
+  const itemsKobo = items.reduce(
     (sum, item) => sum + Math.round(item.unitPrice * 100) * item.quantity,
     0
   );
+  const totalKobo = itemsKobo + deliveryFee * 100;
 
   const res = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",
@@ -102,8 +106,10 @@ async function handlePaystack(
         address: customer.address,
         city: customer.city,
         postal_code: customer.postalCode,
+        state: customer.state ?? "",
         country: customer.country,
         country_code: customer.countryCode,
+        delivery_fee: deliveryFee,
         cart_items: items.map((i) => ({
           product_id: i.productId,
           name: i.name,

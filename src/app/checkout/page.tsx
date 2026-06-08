@@ -9,6 +9,20 @@ import { useCart } from "@/lib/cart-context";
 import { useCountry } from "@/lib/country-context";
 import { formatPrice } from "@/lib/data";
 
+const NIGERIAN_STATES = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa",
+  "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo",
+  "Ekiti", "Enugu", "FCT (Abuja)", "Gombe", "Imo", "Jigawa",
+  "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara",
+  "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun",
+  "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
+];
+
+function getNigerianDeliveryFee(state: string): number {
+  if (state === "Lagos" || state === "Oyo") return 3000;
+  return 7500;
+}
+
 export default function CheckoutPage() {
   const { items, totalItems } = useCart();
   const { country } = useCountry();
@@ -18,17 +32,23 @@ export default function CheckoutPage() {
     address: "",
     city: "",
     postalCode: "",
+    state: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const total = items.reduce(
+  const isNigeria = country.currency === "NGN";
+  const subtotal = items.reduce(
     (sum, item) => sum + item.prices[country.currency] * item.quantity,
     0
   );
+  const deliveryFee = isNigeria && formData.state
+    ? getNigerianDeliveryFee(formData.state)
+    : 0;
+  const total = subtotal + deliveryFee;
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -36,6 +56,12 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isNigeria && !formData.state) {
+      setError("Please select your state.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -52,12 +78,14 @@ export default function CheckoutPage() {
             quantity: item.quantity,
             unitPrice: item.prices[country.currency],
           })),
+          deliveryFee: isNigeria ? deliveryFee : 0,
           customer: {
             name: formData.name,
             email: formData.email,
             address: formData.address,
             city: formData.city,
             postalCode: formData.postalCode,
+            state: formData.state,
             country: country.name,
             countryCode: country.code,
           },
@@ -77,6 +105,9 @@ export default function CheckoutPage() {
     }
   };
 
+  const inputClass =
+    "w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-gold/50 transition-colors";
+
   if (totalItems === 0) {
     return (
       <div className="pt-32 pb-24 text-center">
@@ -89,7 +120,7 @@ export default function CheckoutPage() {
             Add some fragrances to your cart before checking out.
           </p>
           <Link
-            href="/#collection"
+            href="/collection"
             className="inline-block px-8 py-3 bg-gold text-primary-foreground text-sm tracking-[0.15em] uppercase"
           >
             Browse Collection
@@ -139,7 +170,7 @@ export default function CheckoutPage() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-gold/50 transition-colors"
+                  className={inputClass}
                   placeholder="Enter your full name"
                 />
               </div>
@@ -154,7 +185,7 @@ export default function CheckoutPage() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-gold/50 transition-colors"
+                  className={inputClass}
                   placeholder="your@email.com"
                 />
               </div>
@@ -168,6 +199,31 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Nigerian state selector */}
+              {isNigeria && (
+                <div>
+                  <label className="block text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
+                    State
+                  </label>
+                  <select
+                    name="state"
+                    required
+                    value={formData.state}
+                    onChange={handleChange}
+                    className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground focus:outline-none focus:border-gold/50 transition-colors appearance-none"
+                  >
+                    <option value="" disabled className="bg-card text-muted-foreground">
+                      Select your state
+                    </option>
+                    {NIGERIAN_STATES.map((s) => (
+                      <option key={s} value={s} className="bg-card text-foreground">
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
                   Shipping Address
@@ -178,7 +234,7 @@ export default function CheckoutPage() {
                   required
                   value={formData.address}
                   onChange={handleChange}
-                  className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-gold/50 transition-colors"
+                  className={inputClass}
                   placeholder="Street address"
                 />
               </div>
@@ -194,7 +250,7 @@ export default function CheckoutPage() {
                     required
                     value={formData.city}
                     onChange={handleChange}
-                    className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-gold/50 transition-colors"
+                    className={inputClass}
                     placeholder="City"
                   />
                 </div>
@@ -207,7 +263,7 @@ export default function CheckoutPage() {
                     name="postalCode"
                     value={formData.postalCode}
                     onChange={handleChange}
-                    className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-gold/50 transition-colors"
+                    className={inputClass}
                     placeholder="Postal code"
                   />
                 </div>
@@ -227,7 +283,7 @@ export default function CheckoutPage() {
               </button>
 
               <p className="text-xs text-muted-foreground/60 text-center">
-                {country.currency === "NGN"
+                {isNigeria
                   ? "You will be redirected to Paystack for secure payment"
                   : "You will be redirected to Stripe for secure payment"}
               </p>
@@ -282,13 +338,27 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Subtotal</span>
                   <span className="text-foreground">
-                    {formatPrice(total, country.currency)}
+                    {formatPrice(subtotal, country.currency)}
                   </span>
                 </div>
+
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Shipping</span>
-                  <span className="text-gold">Free</span>
+                  <span className="text-muted-foreground">Delivery</span>
+                  {isNigeria ? (
+                    formData.state ? (
+                      <span className="text-foreground">
+                        {formatPrice(deliveryFee, "NGN")}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground/50 text-xs italic">
+                        Select state
+                      </span>
+                    )
+                  ) : (
+                    <span className="text-gold">Free</span>
+                  )}
                 </div>
+
                 <div className="flex justify-between pt-2 border-t border-border/20">
                   <span className="font-heading text-foreground">Total</span>
                   <span className="font-heading text-lg text-gold">
