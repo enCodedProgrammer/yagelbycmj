@@ -35,6 +35,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
+      style={{ cursor: "none" }}
     >
       <body className="min-h-full flex flex-col font-sans">
         <CountryProvider>

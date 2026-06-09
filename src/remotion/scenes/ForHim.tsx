@@ -23,26 +23,26 @@ export function ForHim({ frame, startFrame, isMobile }: { frame: number; startFr
 
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", opacity: sceneOpacity }}>
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #050810 0%, #0a0d1a 50%, #050810 100%)" }} />
-      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(20,40,100,0.2) 0%, transparent 70%)", mixBlendMode: "screen" }} />
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #080603 0%, #110e08 50%, #080603 100%)" }} />
+      <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(100,70,20,0.18) 0%, transparent 70%)", mixBlendMode: "screen" }} />
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(0,0,0,0.85) 100%)" }} />
-      <Particles frame={frame} color="#8899cc" />
+      <Particles frame={frame} color="#c4a878" />
 
       {/* Bottle */}
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", transform: `translateY(${bottleY}px) translateX(${parallaxX}px) scale(${kenBurnsScale})` }}>
-        <img src="/images/yagel-m.jpeg" style={{ height: imgH, objectFit: "contain", filter: "drop-shadow(0 40px 80px rgba(0,0,0,0.9)) drop-shadow(0 0 60px rgba(80,100,200,0.25))" }} />
+        <img src="/images/yagel-m.jpeg" style={{ height: imgH, objectFit: "contain", filter: "drop-shadow(0 40px 80px rgba(0,0,0,0.9)) drop-shadow(0 0 60px rgba(196,168,120,0.2))" }} />
       </div>
 
       {/* Title */}
       {isMobile ? (
         <div style={{ position: "absolute", top: "12%", left: 0, right: 0, textAlign: "center", opacity: titleOpacity, transform: `translateX(${titleX}px)` }}>
-          <div style={{ fontFamily: "Georgia, serif", fontSize: 11, letterSpacing: "0.5em", color: "rgba(136,153,204,0.7)", textTransform: "uppercase", marginBottom: 8 }}>For Him</div>
-          <div style={{ fontFamily: "Georgia, serif", fontSize: 32, fontStyle: "italic", color: "#e8eaf0", lineHeight: 1.1 }}>Yagel</div>
+          <div style={{ fontFamily: "Georgia, serif", fontSize: 11, letterSpacing: "0.5em", color: "rgba(196,168,120,0.7)", textTransform: "uppercase", marginBottom: 8 }}>For Him</div>
+          <div style={{ fontFamily: "Georgia, serif", fontSize: 32, fontStyle: "italic", color: "#f0ebe0", lineHeight: 1.1 }}>Yagel</div>
         </div>
       ) : (
         <div style={{ position: "absolute", right: pad, top: "38%", textAlign: "right", opacity: titleOpacity, transform: `translateX(${titleX}px)` }}>
-          <div style={{ fontFamily: "Georgia, serif", fontSize: 16, letterSpacing: "0.5em", color: "rgba(136,153,204,0.7)", textTransform: "uppercase", marginBottom: 12 }}>For Him</div>
-          <div style={{ fontFamily: "Georgia, serif", fontSize: 52, fontStyle: "italic", color: "#e8eaf0", lineHeight: 1.1, fontWeight: 400 }}>Yagel</div>
+          <div style={{ fontFamily: "Georgia, serif", fontSize: 16, letterSpacing: "0.5em", color: "rgba(196,168,120,0.7)", textTransform: "uppercase", marginBottom: 12 }}>For Him</div>
+          <div style={{ fontFamily: "Georgia, serif", fontSize: 52, fontStyle: "italic", color: "#f0ebe0", lineHeight: 1.1, fontWeight: 400 }}>Yagel</div>
         </div>
       )}
 
@@ -55,8 +55,8 @@ export function ForHim({ frame, startFrame, isMobile }: { frame: number; startFr
             { label: "Base", value: "Oud · Musk", opacity: note3Opacity },
           ].map((note) => (
             <div key={note.label} style={{ opacity: note.opacity, textAlign: "center" }}>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 8, letterSpacing: "0.3em", color: "rgba(136,153,204,0.5)", textTransform: "uppercase", marginBottom: 3 }}>{note.label}</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 11, color: "rgba(232,234,240,0.9)" }}>{note.value}</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 8, letterSpacing: "0.3em", color: "rgba(196,168,120,0.5)", textTransform: "uppercase", marginBottom: 3 }}>{note.label}</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 11, color: "rgba(240,235,224,0.9)" }}>{note.value}</div>
             </div>
           ))}
         </div>
@@ -68,8 +68,8 @@ export function ForHim({ frame, startFrame, isMobile }: { frame: number; startFr
             { label: "Base", value: "Oud · Musk · Incense", opacity: note3Opacity },
           ].map((note) => (
             <div key={note.label} style={{ opacity: note.opacity, marginBottom: 16 }}>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 10, letterSpacing: "0.4em", color: "rgba(136,153,204,0.5)", textTransform: "uppercase", marginBottom: 4 }}>{note.label}</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, color: "rgba(232,234,240,0.9)", letterSpacing: "0.1em" }}>{note.value}</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 10, letterSpacing: "0.4em", color: "rgba(196,168,120,0.5)", textTransform: "uppercase", marginBottom: 4 }}>{note.label}</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, color: "rgba(240,235,224,0.9)", letterSpacing: "0.1em" }}>{note.value}</div>
             </div>
           ))}
         </div>

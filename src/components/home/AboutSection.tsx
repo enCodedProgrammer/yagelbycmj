@@ -59,7 +59,7 @@ const CARD_CONFIGS: CardConfig[] = STORY_IMAGES.map((src, i) => {
     targetXMobile: RADIUS_MOBILE * Math.cos(angle),
     targetYMobile: RADIUS_MOBILE * Math.sin(angle),
     targetRotate: (angle * 180) / Math.PI,
-    spreadEnd: 0.44 * speedMult,
+    spreadEnd: 0.55 * speedMult,
   };
 });
 
@@ -83,7 +83,7 @@ function StoryCard({
   const x = useTransform(scrollYProgress, [0, spreadEnd], [0, tx]);
   const y = useTransform(scrollYProgress, [0, spreadEnd], [0, ty]);
   const rotate = useTransform(scrollYProgress, [0, spreadEnd], [0, targetRotate]);
-  const scale = useTransform(scrollYProgress, [0.44, 0.68], [1, 0.80]);
+  const scale = useTransform(scrollYProgress, [0.55, 0.75], [1, 0.88]);
 
   return (
     <motion.div
@@ -171,7 +171,7 @@ export default function AboutSection() {
   }, []);
 
   // No horizontal shift — cards and text are already a centered flex row
-  const groupX = useTransform(scrollYProgress, [0.44, 0.70], ["0%", "0%"]);
+  const groupX = useTransform(scrollYProgress, [0.55, 0.75], ["0%", "0%"]);
 
   // Act 3: text panel visibility — driven by phase state (not scroll progress)
   // to avoid motion value stale binding issues
@@ -190,7 +190,7 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
   });
 
   return (
-    <section id="about" ref={containerRef} className="relative h-[480vh]">
+    <section id="about" ref={containerRef} className="relative h-[180vh]">
       <div className="sticky top-0 h-screen overflow-hidden bg-background">
 
         {/* ── Static header — always visible above the circle ── */}

@@ -117,7 +117,7 @@
 }
 
 /* Hide default cursor sitewide — custom cursor handles it */
-*, *::before, *::after {
+html, body, *, *::before, *::after {
   cursor: none !important;
 }
 
