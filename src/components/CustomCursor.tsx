@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function CustomCursor() {
+  const [isMobile, setIsMobile] = useState(true);
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
@@ -12,6 +13,12 @@ export default function CustomCursor() {
   const rafRef = useRef<number>(0);
 
   useEffect(() => {
+    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const onMove = (e: MouseEvent) => {
       dotPos.current = { x: e.clientX, y: e.clientY };
     };
@@ -44,6 +51,8 @@ export default function CustomCursor() {
       cancelAnimationFrame(rafRef.current);
     };
   }, []);
+
+  if (isMobile) return null;
 
   return (
     <>

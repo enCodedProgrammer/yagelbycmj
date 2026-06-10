@@ -121,6 +121,16 @@ html, body, *, *::before, *::after {
   cursor: none !important;
 }
 
+/* Restore native cursor on touch devices (no custom cursor there) */
+@media (pointer: coarse) {
+  html, body, *, *::before, *::after {
+    cursor: auto !important;
+  }
+  a, button, [role="button"] {
+    cursor: pointer !important;
+  }
+}
+
 /* Selection color */
 ::selection {
   background: oklch(0.78 0.08 75 / 0.3);
