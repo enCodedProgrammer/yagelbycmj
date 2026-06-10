@@ -8,7 +8,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 export function ForHer({ frame, startFrame, isMobile }: { frame: number; startFrame: number; isMobile?: boolean }) {
   const elapsed = frame - startFrame;
 
-  const sceneOpacity = interpolate(elapsed, [0, 15, 130, 150], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const sceneOpacity = interpolate(elapsed, [0, 15, 150, 168], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const bottleY = interpolate(elapsed, [0, 50], [180, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
   const kenBurnsScale = interpolate(elapsed, [0, 150], [1, 1.08], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const note1Opacity = interpolate(elapsed, [40, 60], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });

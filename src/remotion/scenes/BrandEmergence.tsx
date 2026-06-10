@@ -6,10 +6,10 @@ import { CinematicBars } from "../components/CinematicBars";
 export function BrandEmergence({ frame, startFrame, isMobile }: { frame: number; startFrame: number; isMobile?: boolean }) {
   const elapsed = frame - startFrame;
 
-  const opacity = interpolate(elapsed, [0, 10, 70, 90], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const taglineOpacity = interpolate(elapsed, [40, 60], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const taglineY = interpolate(elapsed, [40, 60], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const lineScale = interpolate(elapsed, [50, 70], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const opacity = interpolate(elapsed, [0, 10, 90, 108], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const taglineOpacity = interpolate(elapsed, [30, 50], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const taglineY = interpolate(elapsed, [30, 50], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const lineScale = interpolate(elapsed, [45, 65], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <div style={{ position: "absolute", inset: 0, background: "#000", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", opacity }}>

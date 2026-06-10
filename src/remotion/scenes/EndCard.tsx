@@ -7,7 +7,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 export function EndCard({ frame, startFrame, isMobile }: { frame: number; startFrame: number; isMobile?: boolean }) {
   const elapsed = frame - startFrame;
 
-  const sceneOpacity = interpolate(elapsed, [0, 20, 120, 150], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const sceneOpacity = interpolate(elapsed, [0, 20, 150, 178], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const logoOpacity = interpolate(elapsed, [15, 40], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const logoY = interpolate(elapsed, [15, 40], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
   const taglineOpacity = interpolate(elapsed, [40, 65], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });

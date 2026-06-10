@@ -7,7 +7,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 export function StoryBeat({ frame, startFrame, isMobile }: { frame: number; startFrame: number; isMobile?: boolean }) {
   const elapsed = frame - startFrame;
 
-  const sceneOpacity = interpolate(elapsed, [0, 12, 78, 90], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const sceneOpacity = interpolate(elapsed, [0, 12, 120, 135], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const line1Opacity = interpolate(elapsed, [15, 35], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const line1Y = interpolate(elapsed, [15, 35], [30, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
   const line2Opacity = interpolate(elapsed, [35, 55], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });

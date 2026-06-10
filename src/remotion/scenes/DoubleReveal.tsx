@@ -8,7 +8,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 export function DoubleReveal({ frame, startFrame, isMobile }: { frame: number; startFrame: number; isMobile?: boolean }) {
   const elapsed = frame - startFrame;
 
-  const sceneOpacity = interpolate(elapsed, [0, 20, 160, 180], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const sceneOpacity = interpolate(elapsed, [0, 20, 178, 198], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const herSlide = interpolate(elapsed, [0, 55], [isMobile ? 0 : -300, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
   const himSlide = interpolate(elapsed, [0, 55], [isMobile ? 0 : 300, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut });
   const herY = isMobile ? interpolate(elapsed, [0, 55], [-200, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: easeOut }) : Math.sin(elapsed * 0.025) * 10;
