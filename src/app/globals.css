@@ -126,3 +126,13 @@ html, body, *, *::before, *::after {
   background: oklch(0.78 0.08 75 / 0.3);
   color: oklch(0.95 0.01 80);
 }
+
+/* Mask hero section height — shorter on mobile so zoom completes faster */
+.mask-hero-section {
+  height: 300vh;
+}
+@media (min-width: 768px) {
+  .mask-hero-section {
+    height: 500vh;
+  }
+}

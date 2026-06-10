@@ -156,6 +156,8 @@ export default function MaskHeroSection() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const isMobile = window.innerWidth < 768;
+
     let rafId: number;
     let gsapCleanup: (() => void) | null = null;
 
@@ -272,27 +274,32 @@ export default function MaskHeroSection() {
         }, 2000);
       };
 
+      // Mobile uses a shorter timeline so reveal happens with less scrolling
+      const total      = isMobile ? 6   : 10;
+      const fadeStart  = isMobile ? 5.0 : 8.5;
+      const revealAt   = isMobile ? 5.5 : 9.2;
+      const lockAt     = isMobile ? 0.88 : 0.92;
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.5,
+          scrub: isMobile ? 0.8 : 1.5,
           onUpdate: (self) => {
-            // Text starts appearing at progress 0.92 — lock at that point
-            if (self.progress >= 0.92) lockScroll();
+            if (self.progress >= lockAt) lockScroll();
           },
         },
       });
 
-      tl.to(canvas, { scale: 80, duration: 10, ease: "expo.in", transformOrigin: "center center" }, 0);
+      tl.to(canvas, { scale: 80, duration: total, ease: "expo.in", transformOrigin: "center center" }, 0);
       tl.to(subheadRef.current, { opacity: 0, duration: 0.5, ease: "none" }, 0);
-      tl.to(canvas, { opacity: 0, duration: 1, ease: "power2.in" }, 8.5);
+      tl.to(canvas, { opacity: 0, duration: 1, ease: "power2.in" }, fadeStart);
 
-      tl.fromTo(overlineRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, 9.2);
-      tl.fromTo(headingRef.current,  { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, 9.35);
-      tl.fromTo(taglineRef.current,  { opacity: 0 },        { opacity: 1,        duration: 0.35 }, 9.5);
-      tl.fromTo(btnsRef.current,     { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, 9.65);
+      tl.fromTo(overlineRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, revealAt);
+      tl.fromTo(headingRef.current,  { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, revealAt + 0.15);
+      tl.fromTo(taglineRef.current,  { opacity: 0 },        { opacity: 1,        duration: 0.35 }, revealAt + 0.3);
+      tl.fromTo(btnsRef.current,     { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, revealAt + 0.45);
 
       gsapCleanup = () => {
         ScrollTrigger.getAll().forEach((t) => t.kill());
@@ -310,7 +317,7 @@ export default function MaskHeroSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ height: "500vh", position: "relative" }}>
+    <section ref={sectionRef} className="mask-hero-section" style={{ position: "relative" }}>
       <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden", background: "#000" }}>
 
         {/* Mobile video */}
