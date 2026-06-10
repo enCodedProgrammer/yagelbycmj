@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import VaporizeTextCycle, { Tag } from "@/components/vapour-text-effect";
+import FloatingParticles from "@/components/home/FloatingParticles";
 
 // ─── Stable Fluids (Jos Stam, simplified) ────────────────────────────────────
 
@@ -349,6 +350,8 @@ export default function MaskHeroSection() {
 
         {/* Hero reveal — appears at 96% scroll */}
         <div style={{ position: "absolute", inset: 0, zIndex: 5, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px", pointerEvents: "none" }}>
+
+          <FloatingParticles color="#c4a878" />
 
           {/* Overline */}
           <div ref={overlineRef} style={{ opacity: 0, marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
