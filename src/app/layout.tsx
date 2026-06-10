@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import { CountryProvider } from "@/lib/country-context";
 import { CartProvider } from "@/lib/cart-context";
@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
 import CustomCursor from "@/components/CustomCursor";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const playfair = Playfair_Display({
   variable: "--font-heading",
@@ -17,6 +18,13 @@ const playfair = Playfair_Display({
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const oswald = Oswald({
+  variable: "--font-condensed",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -34,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} h-full antialiased`}
+      className={`${playfair.variable} ${inter.variable} ${oswald.variable} h-full antialiased`}
       style={{ cursor: "none" }}
     >
       <body className="min-h-full flex flex-col font-sans">
@@ -45,6 +53,7 @@ export default function RootLayout({
             <Footer />
             <CartDrawer />
             <CustomCursor />
+            <SmoothScroll />
           </CartProvider>
         </CountryProvider>
       </body>

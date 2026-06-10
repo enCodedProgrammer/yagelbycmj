@@ -15,6 +15,14 @@ export function CountryProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const forced = process.env.NEXT_PUBLIC_FORCE_COUNTRY;
+    if (forced) {
+      const match = countries.find((c) => c.code === forced);
+      if (match) setCountry(match);
+      setLoading(false);
+      return;
+    }
+
     async function detectCountry() {
       try {
         const res = await fetch("https://ipapi.co/json/");

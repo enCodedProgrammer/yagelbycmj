@@ -1,5 +1,5 @@
 import HeroSection from "@/components/home/HeroSection";
-import HeroSection2 from "@/components/home/HeroSection2";
+import MaskHeroSection from "@/components/home/MaskHeroSection";
 import AboutSection from "@/components/home/AboutSection";
 import ProductsSection from "@/components/home/ProductsSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -9,7 +9,8 @@ import AdSection from "@/components/home/AdSection";
 export default function Home() {
   return (
     <>
-      <HeroSection />
+      {/* <HeroSection /> */}
+      <MaskHeroSection />
       <AboutSection />
       <ProductsSection />
       <AdSection />

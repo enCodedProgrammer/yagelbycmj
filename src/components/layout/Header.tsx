@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X } from "lucide-react";
@@ -11,13 +11,28 @@ export default function Header() {
   const { totalItems, setIsOpen } = useCart();
   const { country } = useCountry();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      // Hero section is 500vh tall; become opaque once scrolled past it
+      setPastHero(window.scrollY >= window.innerHeight * 5);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50"
+      className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500 ${
+        pastHero
+          ? "bg-background/80 backdrop-blur-xl border-border/50"
+          : "bg-transparent backdrop-blur-none border-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
@@ -78,7 +93,7 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border/50"
+            className={`md:hidden border-b transition-colors duration-500 ${pastHero ? "bg-background/95 backdrop-blur-xl border-border/50" : "bg-black/40 backdrop-blur-md border-transparent"}`}
           >
             <nav className="flex flex-col items-center gap-6 py-8">
               <MobileNavLink

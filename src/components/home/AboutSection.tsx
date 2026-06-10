@@ -28,20 +28,29 @@ const STORY_IMAGES = [
 
 const N = STORY_IMAGES.length; // 12
 
-// Desktop dimensions
+// Large desktop (≥1440px)
 const RADIUS = 190;
 const CARD_W = 155;
 const CARD_H = 210;
 
-// Mobile dimensions
+// Small desktop (768px – 1439px)
+const RADIUS_SM = 130;
+const CARD_W_SM = 108;
+const CARD_H_SM = 146;
+
+// Mobile (<768px)
 const RADIUS_MOBILE = 75;
 const CARD_W_MOBILE = 65;
 const CARD_H_MOBILE = 88;
+
+type CardSize = "mobile" | "sm" | "lg";
 
 interface CardConfig {
   src: string;
   targetX: number;
   targetY: number;
+  targetXSm: number;
+  targetYSm: number;
   targetXMobile: number;
   targetYMobile: number;
   targetRotate: number;
@@ -54,8 +63,10 @@ const CARD_CONFIGS: CardConfig[] = STORY_IMAGES.map((src, i) => {
   const speedMult = 0.52 + (i % 6) * 0.08;
   return {
     src,
-    targetX: RADIUS * Math.cos(angle),
-    targetY: RADIUS * Math.sin(angle),
+    targetX:       RADIUS        * Math.cos(angle),
+    targetY:       RADIUS        * Math.sin(angle),
+    targetXSm:     RADIUS_SM     * Math.cos(angle),
+    targetYSm:     RADIUS_SM     * Math.sin(angle),
     targetXMobile: RADIUS_MOBILE * Math.cos(angle),
     targetYMobile: RADIUS_MOBILE * Math.sin(angle),
     targetRotate: (angle * 180) / Math.PI,
@@ -67,18 +78,18 @@ const CARD_CONFIGS: CardConfig[] = STORY_IMAGES.map((src, i) => {
 function StoryCard({
   config,
   scrollYProgress,
-  isMobile,
+  size,
 }: {
   config: CardConfig;
   scrollYProgress: MotionValue<number>;
-  isMobile: boolean;
+  size: CardSize;
 }) {
-  const { src, targetX, targetY, targetXMobile, targetYMobile, targetRotate, spreadEnd } = config;
+  const { src, targetX, targetY, targetXSm, targetYSm, targetXMobile, targetYMobile, targetRotate, spreadEnd } = config;
 
-  const tx = isMobile ? targetXMobile : targetX;
-  const ty = isMobile ? targetYMobile : targetY;
-  const cw = isMobile ? CARD_W_MOBILE : CARD_W;
-  const ch = isMobile ? CARD_H_MOBILE : CARD_H;
+  const tx = size === "mobile" ? targetXMobile : size === "sm" ? targetXSm : targetX;
+  const ty = size === "mobile" ? targetYMobile : size === "sm" ? targetYSm : targetY;
+  const cw = size === "mobile" ? CARD_W_MOBILE : size === "sm" ? CARD_W_SM : CARD_W;
+  const ch = size === "mobile" ? CARD_H_MOBILE : size === "sm" ? CARD_H_SM : CARD_H;
 
   const x = useTransform(scrollYProgress, [0, spreadEnd], [0, tx]);
   const y = useTransform(scrollYProgress, [0, spreadEnd], [0, ty]);
@@ -162,13 +173,23 @@ export default function AboutSection() {
   });
 
   const [isMobile, setIsMobile] = useState(false);
+  const [isSmallDesktop, setIsSmallDesktop] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const mqMobile = window.matchMedia("(max-width: 767px)");
+    const mqSm     = window.matchMedia("(min-width: 768px) and (max-width: 1439px)");
+    setIsMobile(mqMobile.matches);
+    setIsSmallDesktop(mqSm.matches);
+    const onMobile = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    const onSm     = (e: MediaQueryListEvent) => setIsSmallDesktop(e.matches);
+    mqMobile.addEventListener("change", onMobile);
+    mqSm.addEventListener("change", onSm);
+    return () => {
+      mqMobile.removeEventListener("change", onMobile);
+      mqSm.removeEventListener("change", onSm);
+    };
   }, []);
+
+  const cardSize: CardSize = isMobile ? "mobile" : isSmallDesktop ? "sm" : "lg";
 
   // No horizontal shift — cards and text are already a centered flex row
   const groupX = useTransform(scrollYProgress, [0.55, 0.75], ["0%", "0%"]);
@@ -194,7 +215,7 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
       <div className="sticky top-0 h-screen overflow-hidden bg-background">
 
         {/* ── Static header — always visible above the circle ── */}
-        <div className="absolute top-[100px] md:top-[160px] inset-x-0 flex flex-col items-center z-30 pointer-events-none">
+        <div className="absolute top-[100px] md:top-[90px] 2xl:top-[160px] inset-x-0 flex flex-col items-center z-30 pointer-events-none">
           
           <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl tracking-wide text-foreground text-center">
             Capturing Identity Through Scent
@@ -210,13 +231,16 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
           {/* Card ring */}
           <div
             className="relative flex-shrink-0"
-            style={isMobile
-              ? { width: (RADIUS_MOBILE + CARD_W_MOBILE / 2) * 2, height: (RADIUS_MOBILE + CARD_H_MOBILE / 2) * 2 }
-              : { width: (RADIUS + CARD_W / 2) * 2, height: (RADIUS + CARD_H / 2) * 2 }
+            style={
+              cardSize === "mobile"
+                ? { width: (RADIUS_MOBILE + CARD_W_MOBILE / 2) * 2, height: (RADIUS_MOBILE + CARD_H_MOBILE / 2) * 2 }
+                : cardSize === "sm"
+                ? { width: (RADIUS_SM + CARD_W_SM / 2) * 2,         height: (RADIUS_SM + CARD_H_SM / 2) * 2 }
+                : { width: (RADIUS    + CARD_W    / 2) * 2,          height: (RADIUS    + CARD_H    / 2) * 2 }
             }
           >
             {CARD_CONFIGS.map((config, i) => (
-              <StoryCard key={i} config={config} scrollYProgress={scrollYProgress} isMobile={isMobile} />
+              <StoryCard key={i} config={config} scrollYProgress={scrollYProgress} size={cardSize} />
             ))}
           </div>
 
@@ -226,7 +250,13 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
             animate={{ opacity: phase >= 1 ? 1 : 0 }}
             transition={{ duration: 0, ease: "easeOut" }}
             className="flex flex-col justify-center z-20 px-6 md:px-0"
-            style={isMobile ? { width: "100%", maxWidth: 320, marginTop: 16 } : { marginLeft: 60, width: 350, flexShrink: 0 }}
+            style={
+              cardSize === "mobile"
+                ? { width: "100%", maxWidth: 320, marginTop: 16 }
+                : cardSize === "sm"
+                ? { marginLeft: 36, width: 260, flexShrink: 0 }
+                : { marginLeft: 60, width: 350, flexShrink: 0 }
+            }
           >
             <div className="space-y-3 text-foreground/60 leading-relaxed">
             <span className="text-xs tracking-[0.4em] uppercase text-gold/60 mb-3">
