@@ -33,12 +33,12 @@ export async function POST(req: NextRequest) {
   const body: CheckoutBody = await req.json();
   const { currency, items, customer, deliveryFee } = body;
 
-  // Derive base URL from the incoming request so it works on any domain
-  // without relying on NEXT_PUBLIC_BASE_URL being set correctly in production.
-  const origin = req.headers.get("origin") || req.headers.get("referer") || "";
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-    ? process.env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, "")
-    : new URL(origin).origin;
+  // Always derive the base URL from the request so redirects work on any
+  // domain — avoids localhost leaking in when NEXT_PUBLIC_BASE_URL isn't
+  // updated in the deployment environment.
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  const baseUrl = `${proto}://${host}`;
 
   if (currency === "NGN") {
     return handlePaystack(items, customer, deliveryFee, baseUrl);
