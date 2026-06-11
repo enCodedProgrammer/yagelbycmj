@@ -1,23 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function CustomCursor() {
-  const [isMobile, setIsMobile] = useState(true);
-  const dotRef = useRef<HTMLDivElement>(null);
+  const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
-  // Ring position lags behind dot for a trailing effect
   const ringPos = useRef({ x: -100, y: -100 });
-  const dotPos = useRef({ x: -100, y: -100 });
-  const rafRef = useRef<number>(0);
+  const dotPos  = useRef({ x: -100, y: -100 });
+  const rafRef  = useRef<number>(0);
 
   useEffect(() => {
-    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
-  }, []);
-
-  useEffect(() => {
-    if (isMobile) return;
+    // No custom cursor on touch devices
+    if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const onMove = (e: MouseEvent) => {
       dotPos.current = { x: e.clientX, y: e.clientY };
@@ -28,12 +23,10 @@ export default function CustomCursor() {
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
     const tick = () => {
-      // Dot snaps instantly
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${dotPos.current.x - 4}px, ${dotPos.current.y - 4}px)`;
       }
 
-      // Ring lags with lerp
       ringPos.current.x = lerp(ringPos.current.x, dotPos.current.x, 0.12);
       ringPos.current.y = lerp(ringPos.current.y, dotPos.current.y, 0.12);
 
@@ -52,11 +45,9 @@ export default function CustomCursor() {
     };
   }, []);
 
-  if (isMobile) return null;
-
   return (
     <>
-      {/* Outer ring — lags behind */}
+      {/* Outer ring — lags behind dot */}
       <div
         ref={ringRef}
         style={{
