@@ -163,7 +163,9 @@ export default function CartDrawer() {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Free shipping to {country.name}
+                  {country.currency === "NGN"
+                    ? "Delivery fee calculated at checkout"
+                    : `Free shipping to ${country.name}`}
                 </p>
                 <Link
                   href="/checkout"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import VaporizeTextCycle, { Tag } from "@/components/vapour-text-effect";
 import FloatingParticles from "@/components/home/FloatingParticles";
@@ -150,6 +150,15 @@ export default function MaskHeroSection() {
   const headingRef  = useRef<HTMLDivElement>(null);
   const taglineRef  = useRef<HTMLDivElement>(null);
   const btnsRef     = useRef<HTMLDivElement>(null);
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobileView(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobileView(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -354,7 +363,7 @@ export default function MaskHeroSection() {
           <FloatingParticles color="#c4a878" />
 
           {/* Overline */}
-          <div ref={overlineRef} style={{ opacity: 0, marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
+          <div ref={overlineRef} style={{ opacity: 0, marginBottom: isMobileView ? 12 : 24, display: "flex", alignItems: "center", justifyContent: "center", gap: 16 }}>
             <div style={{ width: 40, height: 1, background: "linear-gradient(to right, transparent, rgba(196,168,120,0.4))" }} />
             <span style={{ fontFamily: "var(--font-condensed), sans-serif", fontSize: 12, letterSpacing: "0.4em", textTransform: "uppercase", color: "rgba(196,168,120,0.7)" }}>
               Premium Fragrance
@@ -363,21 +372,21 @@ export default function MaskHeroSection() {
           </div>
 
           {/* YAGEL */}
-          <div ref={headingRef} style={{ opacity: 0, marginBottom: 40 }}>
+          <div ref={headingRef} style={{ opacity: 0, marginBottom: isMobileView ? 16 : 40 }}>
             <span style={{ fontFamily: "var(--font-heading), serif", fontSize: "clamp(72px, 12vw, 140px)", letterSpacing: "0.2em", textTransform: "uppercase", color: "#ffffff", lineHeight: 1, display: "block" }}>
               YAGEL
             </span>
           </div>
 
           {/* Tagline cycling text */}
-          <div ref={taglineRef} style={{ opacity: 0, marginBottom: 40, height: 45, width: "100%" }}>
+          <div ref={taglineRef} style={{ opacity: 0, marginBottom: isMobileView ? 20 : 40, height: isMobileView ? 36 : 45, width: "100%", maxWidth: "100vw", overflow: "hidden" }}>
             <VaporizeTextCycle
               texts={[
                 "A signature of elegance and presence",
                 "Crafted for him and her",
                 "Unforgettable by design",
               ]}
-              font={{ fontFamily: "Playfair Display, serif", fontSize: "28px", fontWeight: 400 }}
+              font={{ fontFamily: "Playfair Display, serif", fontSize: isMobileView ? "17px" : "28px", fontWeight: 400 }}
               color="rgb(210, 190, 150)"
               spread={3}
               density={7}
@@ -389,7 +398,7 @@ export default function MaskHeroSection() {
           </div>
 
           {/* Buttons */}
-          <div ref={btnsRef} style={{ opacity: 0, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 20, pointerEvents: "auto" }}>
+          <div ref={btnsRef} style={{ opacity: 0, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: isMobileView ? 12 : 20, pointerEvents: "auto" }}>
             <Link
               href="/collection"
               style={{ display: "inline-block", padding: "16px 40px", background: "#C4A878", color: "#0d0d0d", fontFamily: "var(--font-condensed), sans-serif", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", transition: "box-shadow 0.4s" }}

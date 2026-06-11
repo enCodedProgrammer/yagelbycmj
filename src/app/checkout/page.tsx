@@ -8,6 +8,7 @@ import { ArrowLeft, ShoppingBag, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useCountry } from "@/lib/country-context";
 import { formatPrice } from "@/lib/data";
+import { LAGOS_ZONES, getNigerianDeliveryFee } from "@/lib/delivery";
 
 const NIGERIAN_STATES = [
   "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa",
@@ -17,11 +18,6 @@ const NIGERIAN_STATES = [
   "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun",
   "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
 ];
-
-function getNigerianDeliveryFee(state: string): number {
-  if (state === "Lagos" || state === "Oyo") return 3000;
-  return 7500;
-}
 
 export default function CheckoutPage() {
   const { items, totalItems } = useCart();
@@ -33,6 +29,7 @@ export default function CheckoutPage() {
     city: "",
     postalCode: "",
     state: "",
+    lagosArea: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,16 +39,23 @@ export default function CheckoutPage() {
     (sum, item) => sum + item.prices[country.currency] * item.quantity,
     0
   );
-  const deliveryFee = isNigeria && formData.state
-    ? getNigerianDeliveryFee(formData.state)
+  const computedFee = isNigeria
+    ? getNigerianDeliveryFee(formData.state, formData.lagosArea)
     : 0;
+  const deliveryFee = computedFee ?? 0;
+  const feePending = isNigeria && computedFee === null;
   const total = subtotal + deliveryFee;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      // Reset area when the state changes away from Lagos
+      ...(name === "state" && value !== "Lagos" ? { lagosArea: "" } : {}),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,6 +63,10 @@ export default function CheckoutPage() {
 
     if (isNigeria && !formData.state) {
       setError("Please select your state.");
+      return;
+    }
+    if (isNigeria && formData.state === "Lagos" && !formData.lagosArea) {
+      setError("Please select your delivery area in Lagos.");
       return;
     }
 
@@ -86,6 +94,7 @@ export default function CheckoutPage() {
             city: formData.city,
             postalCode: formData.postalCode,
             state: formData.state,
+            lagosArea: formData.lagosArea,
             country: country.name,
             countryCode: country.code,
           },
@@ -224,6 +233,43 @@ export default function CheckoutPage() {
                 </div>
               )}
 
+              {/* Lagos delivery area selector — fee depends on zone */}
+              {isNigeria && formData.state === "Lagos" && (
+                <div>
+                  <label className="block text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
+                    Delivery Area
+                  </label>
+                  <select
+                    name="lagosArea"
+                    required
+                    value={formData.lagosArea}
+                    onChange={handleChange}
+                    className="w-full bg-card/50 border border-border/50 px-4 py-3 text-sm text-foreground focus:outline-none focus:border-gold/50 transition-colors appearance-none"
+                  >
+                    <option value="" disabled className="bg-card text-muted-foreground">
+                      Select your area
+                    </option>
+                    {LAGOS_ZONES.flatMap((zone) => zone.areas)
+                      .sort((a, b) => a.localeCompare(b))
+                      .map((area) => (
+                        <option key={area} value={area} className="bg-card text-foreground">
+                          {area}
+                        </option>
+                      ))}
+                  </select>
+                  <p className="text-[11px] text-muted-foreground/60 mt-2">
+                    {formData.lagosArea ? (
+                      <>
+                        Delivery to {formData.lagosArea}:{" "}
+                        <span className="text-gold">{formatPrice(deliveryFee, "NGN")}</span>
+                      </>
+                    ) : (
+                      <>Can&apos;t find your exact area? Choose the one closest to you.</>
+                    )}
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
                   Shipping Address
@@ -345,13 +391,17 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Delivery</span>
                   {isNigeria ? (
-                    formData.state ? (
-                      <span className="text-foreground">
-                        {formatPrice(deliveryFee, "NGN")}
-                      </span>
-                    ) : (
+                    !formData.state ? (
                       <span className="text-muted-foreground/50 text-xs italic">
                         Select state
+                      </span>
+                    ) : feePending ? (
+                      <span className="text-muted-foreground/50 text-xs italic">
+                        Select delivery area
+                      </span>
+                    ) : (
+                      <span className="text-foreground">
+                        {formatPrice(deliveryFee, "NGN")}
                       </span>
                     )
                   ) : (

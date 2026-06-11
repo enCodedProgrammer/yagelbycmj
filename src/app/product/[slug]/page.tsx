@@ -282,8 +282,9 @@ export default function ProductPage() {
                 {formatPrice(price, country.currency)}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Free shipping to {country.name} &middot; {country.shippingDays}{" "}
-                business days
+                {country.currency === "NGN"
+                  ? `Delivery fee calculated at checkout · ${country.shippingDays} business days`
+                  : `Free shipping to ${country.name} · ${country.shippingDays} business days`}
               </p>
             </div>
 

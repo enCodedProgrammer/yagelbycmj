@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Truck, Clock, Package, Globe } from "lucide-react";
+import { Truck, Clock, Package, Globe, MapPin } from "lucide-react";
 import { countries } from "@/lib/data";
+import { STATE_TIERS } from "@/lib/delivery";
 
 export default function ShippingPage() {
   return (
@@ -34,10 +35,11 @@ export default function ShippingPage() {
           >
             <Truck className="w-8 h-8 text-gold mx-auto mb-4" />
             <h2 className="font-heading text-2xl text-foreground mb-2">
-              Free Shipping on All Orders
+              Free Shipping to the UK &amp; US
             </h2>
             <p className="text-muted-foreground">
-              Regardless of location, every Yagel order ships free.
+              Every order to the United Kingdom and United States ships free.
+              Within Nigeria, a delivery fee applies based on your location.
             </p>
           </motion.div>
 
@@ -69,6 +71,58 @@ export default function ShippingPage() {
                 </div>
               ))}
             </div>
+          </motion.div>
+
+          {/* Nigeria Delivery Fees */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <MapPin className="w-5 h-5 text-gold" />
+              <h2 className="font-heading text-xl text-foreground tracking-wide">
+                Delivery Fees Within Nigeria
+              </h2>
+            </div>
+            <div className="bg-card/30 border border-border/30 divide-y divide-border/20">
+              <div className="p-6 flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-medium text-foreground mb-1">Lagos</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Fee depends on your delivery area — calculated at checkout
+                    when you select your location.
+                  </p>
+                </div>
+                <span className="text-sm text-gold whitespace-nowrap">₦3,000 – ₦6,000</span>
+              </div>
+              <div className="p-6 flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-medium text-foreground mb-1">Oyo State</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Flat rate to any location within Oyo.
+                  </p>
+                </div>
+                <span className="text-sm text-gold whitespace-nowrap">₦3,000</span>
+              </div>
+              {STATE_TIERS.map((tier) => (
+                <div key={tier.id} className="p-6 flex items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-foreground mb-1">{tier.label}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {tier.description}: {tier.states.join(", ")}.
+                    </p>
+                  </div>
+                  <span className="text-sm text-gold whitespace-nowrap">
+                    ₦{tier.fee.toLocaleString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground/60 mt-3">
+              Fees within Nigeria are based on distance from our Lagos dispatch
+              station and are calculated automatically at checkout.
+            </p>
           </motion.div>
 
           {/* Order Processing */}

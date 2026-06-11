@@ -79,9 +79,9 @@ export const products: Product[] = [
       base: "Vanilla, Oud, Amber, Musk",
     },
     prices: {
-      GBP: 40,
-      USD: 40,
-      NGN: 40000,
+      GBP: 34.99,
+      USD: 34.99,
+      NGN: 30000,
     },
     image: "/images/yagel-f.jpeg",
     gallery: [
@@ -106,9 +106,9 @@ export const products: Product[] = [
       base: "Ambergris, Amberwood, Oud, Musk, Incense, Vanilla",
     },
     prices: {
-      GBP: 40,
-      USD: 40,
-      NGN: 40000,
+      GBP: 34.99,
+      USD: 34.99,
+      NGN: 30000,
     },
     image: "/images/yagel-m.jpeg",
     gallery: [

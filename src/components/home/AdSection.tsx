@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { YagelAd, TOTAL_FRAMES } from "@/remotion/Ad";
+
+const FPS = 30;
 
 export default function AdSection() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef(0);
   const [frame, setFrame] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -17,22 +19,49 @@ export default function AdSection() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
+  // Auto-play loop; pauses while the section is off-screen
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
 
-  const frameMotion = useTransform(scrollYProgress, [0, 1], [0, TOTAL_FRAMES]);
+    let rafId = 0;
+    let playing = false;
+    let startTime = 0;
 
-  useMotionValueEvent(frameMotion, "change", (v) => {
-    setFrame(Math.round(v));
-  });
+    const tick = (now: number) => {
+      if (!playing) return;
+      const elapsed = (now - startTime) / 1000;
+      const f = Math.floor(elapsed * FPS) % TOTAL_FRAMES;
+      frameRef.current = f;
+      setFrame(f);
+      rafId = requestAnimationFrame(tick);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !playing) {
+          playing = true;
+          // Resume from the frame we paused at
+          startTime = performance.now() - (frameRef.current / FPS) * 1000;
+          rafId = requestAnimationFrame(tick);
+        } else if (!entry.isIntersecting && playing) {
+          playing = false;
+          cancelAnimationFrame(rafId);
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   return (
-    <div ref={containerRef} style={{ height: "900vh", position: "relative" }}>
-      <div style={{ position: "sticky", top: 0, width: "100%", height: "100vh", overflow: "hidden" }}>
-        <YagelAd frame={frame} isMobile={isMobile} />
-      </div>
+    <div ref={containerRef} style={{ position: "relative", width: "100%", height: "100vh", overflow: "hidden" }}>
+      <YagelAd frame={frame} isMobile={isMobile} />
     </div>
   );
 }

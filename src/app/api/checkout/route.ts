@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { getNigerianDeliveryFee } from "@/lib/delivery";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ export interface CheckoutBody {
     quantity: number;
     unitPrice: number;
   }[];
-  deliveryFee: number; // NGN only, 0 for GBP/USD
+  deliveryFee: number; // legacy, ignored — fee is computed server-side
   customer: {
     name: string;
     email: string;
@@ -24,6 +25,7 @@ export interface CheckoutBody {
     city: string;
     postalCode: string;
     state?: string;
+    lagosArea?: string;
     country: string;
     countryCode: string;
   };
@@ -31,7 +33,7 @@ export interface CheckoutBody {
 
 export async function POST(req: NextRequest) {
   const body: CheckoutBody = await req.json();
-  const { currency, items, customer, deliveryFee } = body;
+  const { currency, items, customer } = body;
 
   // Always derive the base URL from the request so redirects work on any
   // domain — avoids localhost leaking in when NEXT_PUBLIC_BASE_URL isn't
@@ -41,6 +43,17 @@ export async function POST(req: NextRequest) {
   const baseUrl = `${proto}://${host}`;
 
   if (currency === "NGN") {
+    // Compute the fee server-side so the client can't tamper with it
+    const deliveryFee = getNigerianDeliveryFee(
+      customer.state ?? "",
+      customer.lagosArea
+    );
+    if (deliveryFee === null) {
+      return NextResponse.json(
+        { error: "Please select your state and delivery area." },
+        { status: 400 }
+      );
+    }
     return handlePaystack(items, customer, deliveryFee, baseUrl);
   }
 
@@ -113,6 +126,7 @@ async function handlePaystack(
         city: customer.city,
         postal_code: customer.postalCode,
         state: customer.state ?? "",
+        lagos_area: customer.lagosArea ?? "",
         country: customer.country,
         country_code: customer.countryCode,
         delivery_fee: deliveryFee,

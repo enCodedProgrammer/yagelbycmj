@@ -48,8 +48,8 @@ export default function CTASection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-foreground/50 mt-6 mb-10 text-base sm:text-lg max-w-xl mx-auto"
         >
-          Free shipping on every order. Delivered to your door in the UK, US,
-          and Nigeria.
+          Free shipping to the UK and US. Delivered to your door
+          nationwide in Nigeria.
         </motion.p>
 
         <motion.div

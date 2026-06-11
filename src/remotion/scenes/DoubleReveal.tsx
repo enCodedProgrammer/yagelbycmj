@@ -36,8 +36,8 @@ export function DoubleReveal({ frame, startFrame, isMobile }: { frame: number; s
             <img src="/images/yagel-f.jpeg" style={{ height: imgH, objectFit: "contain", filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.7))" }} />
             <div style={{ opacity: priceOpacity, transform: `translateY(${priceY}px)` }}>
               <div style={{ fontFamily: "Georgia, serif", fontSize: 10, letterSpacing: "0.3em", color: "rgba(196,168,120,0.6)", textTransform: "uppercase", marginBottom: 4 }}>For Her</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 18, color: "#c4a878" }}>£40 · $40</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 13, color: "rgba(196,168,120,0.6)", marginTop: 2 }}>₦40,000</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 18, color: "#c4a878" }}>£34.99 · $34.99</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 13, color: "rgba(196,168,120,0.6)", marginTop: 2 }}>₦30,000</div>
             </div>
           </div>
 
@@ -49,8 +49,8 @@ export function DoubleReveal({ frame, startFrame, isMobile }: { frame: number; s
             <img src="/images/yagel-m.jpeg" style={{ height: imgH, objectFit: "contain", filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.7))" }} />
             <div style={{ opacity: priceOpacity, transform: `translateY(${priceY}px)`, textAlign: "right" }}>
               <div style={{ fontFamily: "Georgia, serif", fontSize: 10, letterSpacing: "0.3em", color: "rgba(196,168,120,0.6)", textTransform: "uppercase", marginBottom: 4 }}>For Him</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 18, color: "#c4a878" }}>£40 · $40</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 13, color: "rgba(196,168,120,0.6)", marginTop: 2 }}>₦40,000</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 18, color: "#c4a878" }}>£34.99 · $34.99</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 13, color: "rgba(196,168,120,0.6)", marginTop: 2 }}>₦30,000</div>
             </div>
           </div>
         </div>
@@ -61,8 +61,8 @@ export function DoubleReveal({ frame, startFrame, isMobile }: { frame: number; s
             <img src="/images/yagel-f.jpeg" style={{ height: imgH, objectFit: "contain", filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(196,168,120,0.25))" }} />
             <div style={{ opacity: priceOpacity, transform: `translateY(${priceY}px)`, textAlign: "center" }}>
               <div style={{ fontFamily: "Georgia, serif", fontSize: 13, letterSpacing: "0.4em", color: "rgba(196,168,120,0.6)", textTransform: "uppercase", marginBottom: 6 }}>For Her</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#c4a878" }}>£40 · $40</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, color: "rgba(196,168,120,0.6)", marginTop: 4 }}>₦40,000</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#c4a878" }}>£34.99 · $34.99</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, color: "rgba(196,168,120,0.6)", marginTop: 4 }}>₦30,000</div>
             </div>
           </div>
 
@@ -72,8 +72,8 @@ export function DoubleReveal({ frame, startFrame, isMobile }: { frame: number; s
             <img src="/images/yagel-m.jpeg" style={{ height: imgH, objectFit: "contain", filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.7)) drop-shadow(0 0 40px rgba(80,100,200,0.2))" }} />
             <div style={{ opacity: priceOpacity, transform: `translateY(${priceY}px)`, textAlign: "center" }}>
               <div style={{ fontFamily: "Georgia, serif", fontSize: 13, letterSpacing: "0.4em", color: "rgba(196,168,120,0.6)", textTransform: "uppercase", marginBottom: 6 }}>For Him</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#c4a878" }}>£40 · $40</div>
-              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, color: "rgba(196,168,120,0.6)", marginTop: 4 }}>₦40,000</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 26, color: "#c4a878" }}>£34.99 · $34.99</div>
+              <div style={{ fontFamily: "Georgia, serif", fontSize: 16, color: "rgba(196,168,120,0.6)", marginTop: 4 }}>₦30,000</div>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ export function DoubleReveal({ frame, startFrame, isMobile }: { frame: number; s
 
       <div style={{ position: "absolute", bottom: isMobile ? 40 : 80, left: 0, right: 0, textAlign: "center", opacity: ctaOpacity }}>
         <div style={{ fontFamily: "Georgia, serif", fontSize: isMobile ? 9 : 12, letterSpacing: "0.4em", color: "rgba(196,168,120,0.5)", textTransform: "uppercase" }}>
-          Free Shipping · UK · USA · Nigeria
+          Free Shipping · UK · USA &nbsp;·&nbsp; Delivery Nationwide · Nigeria
         </div>
       </div>
 
