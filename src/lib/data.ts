@@ -1,6 +1,7 @@
 export interface ProductImage {
   src: string;
   alt: string;
+  type?: "image" | "video";
 }
 
 export interface Product {
@@ -84,9 +85,9 @@ export const products: Product[] = [
     },
     image: "/images/yagel-f.jpeg",
     gallery: [
-      { src: "/images/yagel-f.jpeg", alt: "Yagel For Her — Front View" },
-      { src: "/images/yagel-f.jpeg", alt: "Yagel For Her — Side View" },
-      { src: "/images/yagel-f.jpeg", alt: "Yagel For Her — Back View" },
+      { src: "/images/yagel-f.jpeg",   alt: "Yagel For Her — Bottle",   type: "image" },
+      { src: "/images/yagel-f-1.mp4",  alt: "Yagel For Her — Campaign", type: "video" },
+      { src: "/images/yagel-f-2.PNG",  alt: "Yagel For Her — Detail",   type: "image" },
     ],
     gender: "her",
   },
@@ -111,9 +112,9 @@ export const products: Product[] = [
     },
     image: "/images/yagel-m.jpeg",
     gallery: [
-      { src: "/images/yagel-m.jpeg", alt: "Yagel For Him — Front View" },
-      { src: "/images/yagel-m.jpeg", alt: "Yagel For Him — Side View" },
-      { src: "/images/yagel-m.jpeg", alt: "Yagel For Him — Back View" },
+      { src: "/images/yagel-m.jpeg",   alt: "Yagel For Him — Bottle",   type: "image" },
+      { src: "/images/yagel-m-1.mp4",  alt: "Yagel For Him — Campaign", type: "video" },
+      { src: "/images/yagel-m-2.JPG",  alt: "Yagel For Him — Detail",   type: "image" },
     ],
     gender: "him",
   },

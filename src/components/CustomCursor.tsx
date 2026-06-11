@@ -50,6 +50,7 @@ export default function CustomCursor() {
       {/* Outer ring — lags behind dot */}
       <div
         ref={ringRef}
+        className="custom-cursor-ring"
         style={{
           position: "fixed",
           top: 0,
@@ -68,6 +69,7 @@ export default function CustomCursor() {
       {/* Inner dot — snaps instantly */}
       <div
         ref={dotRef}
+        className="custom-cursor-dot"
         style={{
           position: "fixed",
           top: 0,

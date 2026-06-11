@@ -1,10 +1,20 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Star } from "lucide-react";
 
-const testimonials = [
+interface Review {
+  id: string;
+  product_id: string;
+  product_name: string;
+  reviewer_name: string;
+  rating: number;
+  comment: string;
+  submitted_at: string;
+}
+
+const STATIC_TESTIMONIALS = [
   {
     name: "Sophia M.",
     location: "London, UK",
@@ -28,17 +38,83 @@ const testimonials = [
   },
 ];
 
+function TestimonialCard({
+  name,
+  sub,
+  rating,
+  text,
+  delay,
+  isInView,
+}: {
+  name: string;
+  sub: string;
+  rating: number;
+  text: string;
+  delay: number;
+  isInView: boolean;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, delay }}
+      className="relative bg-card/30 border border-border/30 p-8 backdrop-blur-sm hover:border-gold/20 transition-all duration-500"
+    >
+      <span className="absolute top-4 right-6 font-heading text-6xl text-gold/10">
+        &ldquo;
+      </span>
+      <div className="flex gap-1 mb-4">
+        {[...Array(rating)].map((_, i) => (
+          <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+        ))}
+      </div>
+      <p className="text-sm text-foreground/60 leading-relaxed mb-6 italic">
+        &ldquo;{text}&rdquo;
+      </p>
+      <div className="pt-4 border-t border-border/20">
+        <p className="text-sm font-medium text-foreground/80">{name}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
+      </div>
+    </motion.div>
+  );
+}
+
 export default function TestimonialsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [reviews, setReviews] = useState<Review[] | null>(null);
+
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then((r) => r.json())
+      .then((data: Review[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setReviews(data.slice(0, 6));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const cards =
+    reviews !== null
+      ? reviews.map((r) => ({
+          name: r.reviewer_name || "Anonymous",
+          sub: r.product_name,
+          rating: r.rating,
+          text: r.comment,
+        }))
+      : STATIC_TESTIMONIALS.map((t) => ({
+          name: t.name,
+          sub: `${t.location} · ${t.product}`,
+          rating: t.rating,
+          text: t.text,
+        }));
 
   return (
     <section ref={ref} className="relative py-32 md:py-40 overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--gold)_0%,_transparent_60%)] opacity-[0.03]" />
 
       <div className="max-w-7xl mx-auto px-6">
-        {/* Section header */}
         <div className="text-center mb-20">
           <motion.span
             initial={{ opacity: 0, y: 20 }}
@@ -59,46 +135,17 @@ export default function TestimonialsSection() {
           </motion.h2>
         </div>
 
-        {/* Testimonials grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.name}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.3 + index * 0.15 }}
-              className="relative bg-card/30 border border-border/30 p-8 backdrop-blur-sm hover:border-gold/20 transition-all duration-500"
-            >
-              {/* Quote mark */}
-              <span className="absolute top-4 right-6 font-heading text-6xl text-gold/10">
-                &ldquo;
-              </span>
-
-              {/* Stars */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 fill-gold text-gold"
-                  />
-                ))}
-              </div>
-
-              {/* Text */}
-              <p className="text-sm text-foreground/60 leading-relaxed mb-6 italic">
-                &ldquo;{testimonial.text}&rdquo;
-              </p>
-
-              {/* Author */}
-              <div className="pt-4 border-t border-border/20">
-                <p className="text-sm font-medium text-foreground/80">
-                  {testimonial.name}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {testimonial.location} &middot; {testimonial.product}
-                </p>
-              </div>
-            </motion.div>
+        <div className={`grid grid-cols-1 gap-8 ${cards.length === 1 ? "md:grid-cols-1 max-w-md mx-auto" : cards.length === 2 ? "md:grid-cols-2 max-w-2xl mx-auto" : "md:grid-cols-3"}`}>
+          {cards.map((card, i) => (
+            <TestimonialCard
+              key={i}
+              name={card.name}
+              sub={card.sub}
+              rating={card.rating}
+              text={card.text}
+              delay={0.3 + i * 0.15}
+              isInView={isInView}
+            />
           ))}
         </div>
       </div>

@@ -121,7 +121,7 @@ html, body, *, *::before, *::after {
   cursor: none !important;
 }
 
-/* Restore native cursor on touch devices (no custom cursor there) */
+/* Restore native cursor on touch devices and hide custom cursor elements */
 @media (pointer: coarse) {
   html, body, *, *::before, *::after {
     cursor: auto !important;
@@ -129,7 +129,14 @@ html, body, *, *::before, *::after {
   a, button, [role="button"] {
     cursor: pointer !important;
   }
+  .custom-cursor-ring,
+  .custom-cursor-dot {
+    display: none !important;
+  }
 }
+
+/* Hide scrollbar in gallery strip */
+.gallery-track::-webkit-scrollbar { display: none; }
 
 /* Selection color */
 ::selection {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { createReviewToken, sendReviewEmail } from "@/lib/reviews";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +64,25 @@ export async function POST(req: NextRequest) {
     });
 
     await getSupabaseAdmin().from("order_items").insert(orderItems);
+
+    // Create a review token for each purchased product and send review email
+    const customerEmail = session.customer_email;
+    const customerName = meta.customer_name ?? "Customer";
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+    const proto = req.headers.get("x-forwarded-proto") || "https";
+    const baseUrl = `${proto}://${host}`;
+
+    for (const item of orderItems) {
+      const token = await createReviewToken(
+        order.id,
+        item.product_id,
+        item.product_name,
+        customerName
+      );
+      if (customerEmail) {
+        await sendReviewEmail(customerEmail, customerName, token, item.product_name, baseUrl);
+      }
+    }
   }
 
   return NextResponse.json({ received: true });

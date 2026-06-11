@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { createReviewToken, sendReviewEmail } from "@/lib/reviews";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,25 @@ export async function POST(req: NextRequest) {
           unit_price: item.unit_price,
         }))
       );
+
+      // Create a review token per product and send review email
+      const customerEmail = data.customer?.email;
+      const customerName = meta.customer_name ?? "Customer";
+      const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+      const proto = req.headers.get("x-forwarded-proto") || "https";
+      const baseUrl = `${proto}://${host}`;
+
+      for (const item of cartItems) {
+        const token = await createReviewToken(
+          order.id,
+          item.product_id,
+          item.name,
+          customerName
+        );
+        if (customerEmail) {
+          await sendReviewEmail(customerEmail, customerName, token, item.name, baseUrl);
+        }
+      }
     }
   }
 

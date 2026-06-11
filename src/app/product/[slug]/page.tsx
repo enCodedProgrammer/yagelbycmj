@@ -1,14 +1,110 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag, Minus, Plus } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Minus, Plus, Star } from "lucide-react";
 import { products, formatPrice } from "@/lib/data";
 import { useCountry } from "@/lib/country-context";
 import { useCart } from "@/lib/cart-context";
+
+interface Review {
+  id: string;
+  reviewer_name: string;
+  rating: number;
+  comment: string;
+  submitted_at: string;
+}
+
+function ReviewsSection({ productId }: { productId: string }) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/reviews?product=${productId}`)
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setReviews(data); })
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, [productId]);
+
+  const avg = reviews.length
+    ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10
+    : 0;
+
+  return (
+    <div className="mt-20 pt-16 border-t border-border/20">
+      <h2 className="font-heading text-2xl tracking-wide text-foreground mb-2">
+        Customer Reviews
+      </h2>
+
+      {loaded && reviews.length === 0 && (
+        <p className="text-muted-foreground text-sm mt-4">
+          No reviews yet — be the first to share your experience.
+        </p>
+      )}
+
+      {reviews.length > 0 && (
+        <>
+          {/* Average */}
+          <div className="flex items-center gap-3 mb-10">
+            <span className="font-heading text-4xl text-gold">{avg}</span>
+            <div>
+              <div className="flex gap-1 mb-1">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    className={`w-4 h-4 ${s <= Math.round(avg) ? "fill-gold text-gold" : "fill-transparent text-gold/30"}`}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+          </div>
+
+          {/* Review cards */}
+          <div className="space-y-6">
+            {reviews.map((r) => (
+              <motion.div
+                key={r.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="border border-border/30 bg-card/20 p-6"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`w-3.5 h-3.5 ${s <= r.rating ? "fill-gold text-gold" : "fill-transparent text-gold/20"}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm font-medium text-foreground/80">
+                    {r.reviewer_name || "Anonymous"}
+                  </span>
+                  <span className="text-xs text-muted-foreground ml-auto">
+                    {new Date(r.submitted_at).toLocaleDateString("en-GB", {
+                      year: "numeric", month: "short", day: "numeric",
+                    })}
+                  </span>
+                </div>
+                <p className="text-sm text-foreground/60 leading-relaxed italic">
+                  &ldquo;{r.comment}&rdquo;
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function ProductPage() {
   const params = useParams();
@@ -76,7 +172,7 @@ export default function ProductPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Main Image */}
+            {/* Main viewer */}
             <div className="relative aspect-square bg-gradient-to-b from-muted/20 to-card/50 border border-border/30 flex items-center justify-center overflow-hidden mb-4">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--gold)_0%,_transparent_60%)] opacity-[0.06]" />
               <AnimatePresence mode="wait">
@@ -86,16 +182,27 @@ export default function ProductPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className="relative z-10"
+                  className="relative z-10 w-full h-full flex items-center justify-center"
                 >
-                  <Image
-                    src={product.gallery[selectedImage].src}
-                    alt={product.gallery[selectedImage].alt}
-                    width={500}
-                    height={500}
-                    className="w-72 sm:w-80 md:w-96 h-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
-                    priority
-                  />
+                  {product.gallery[selectedImage].type === "video" ? (
+                    <video
+                      src={product.gallery[selectedImage].src}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={product.gallery[selectedImage].src}
+                      alt={product.gallery[selectedImage].alt}
+                      width={500}
+                      height={500}
+                      className="w-72 sm:w-80 md:w-96 h-auto drop-shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
+                      priority
+                    />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -112,13 +219,22 @@ export default function ProductPage() {
                       : "border-border/30 hover:border-gold/30"
                   }`}
                 >
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    width={80}
-                    height={80}
-                    className="w-14 sm:w-16 h-auto"
-                  />
+                  {img.type === "video" ? (
+                    <video
+                      src={img.src}
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover pointer-events-none"
+                    />
+                  ) : (
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      width={80}
+                      height={80}
+                      className="w-14 sm:w-16 h-auto"
+                    />
+                  )}
                   {selectedImage === i && (
                     <motion.div
                       layoutId="thumbnail-indicator"
@@ -232,6 +348,9 @@ export default function ProductPage() {
             </div>
           </motion.div>
         </div>
+
+        {/* Reviews */}
+        <ReviewsSection productId={product.id} />
       </div>
     </div>
   );

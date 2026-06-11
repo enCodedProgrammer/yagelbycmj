@@ -10,23 +10,19 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 
-// ─── 12 visually varied picks from the story folder ──────────────────────────
+// ─── 8 visually varied picks from the story folder ───────────────────────────
 const STORY_IMAGES = [
-  "/story/_DSC3825.jpeg",
-  "/story/_DSC3836.jpeg",
-  "/story/_DSC3851.jpeg",
-  "/story/_DSC3860.jpeg",
-  "/story/_DSC3872.jpeg",
-  "/story/_DSC3882.jpeg",
-  "/story/_DSC3899.jpeg",
-  "/story/_DSC3910.jpeg",
-  "/story/_DSC3931.jpeg",
-  "/story/_DSC3951.jpeg",
-  "/story/_DSC3963.jpeg",
-  "/story/_DSC4010.jpeg",
+  "/story/_DSC3865.jpeg",                                    // female portrait
+  "/story/035AD806-64CD-49C6-B0E9-A44961D04C43.png",        // both bottles, roses
+  "/story/4F0AA910-F278-4E57-80A1-C6200F4017C3.png",        // elegant hands, For Her
+  "/story/8C4270F2-ADD4-472D-9022-D3DFAFE8CCC2.png",        // both boxes, ingredients
+  "/story/_DSC3958.jpeg",                                    // male portrait
+  "/story/491029B2-5C93-4273-BF67-3C3F2C9E3A50.png",        // both boxes, gold satin
+  "/story/4C93DCC8-FCD5-4722-A0F2-6D5DE1DB94E2.png",        // hands, For Him uncap
+  "/story/AB1A8EAC-2553-4107-ADD3-4E7509CA3C75.png",        // For Him flat lay
 ];
 
-const N = STORY_IMAGES.length; // 12
+const N = STORY_IMAGES.length; // 8
 
 // Large desktop (≥1440px)
 const RADIUS = 190;
