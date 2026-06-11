@@ -6,7 +6,13 @@
       "Bash(cp -r yagel-temp/* yagel/)",
       "Bash(cp yagel-temp/.gitignore yagel/)",
       "Bash(cp yagel-temp/.eslintrc* yagel/)",
-      "Bash(rm -rf yagel/AGENTS.md yagel/README.md)"
+      "Bash(rm -rf yagel/AGENTS.md yagel/README.md)",
+      "Skill(run)",
+      "Bash(python -c \"import sys,json; s=json.load\\(sys.stdin\\); [print\\(k,':',v\\) for k,v in s.get\\('scripts',{}\\).items\\(\\)]\")",
+      "Bash(python -c \"import sys,json; s=json.load\\(sys.stdin\\); deps={**s.get\\('dependencies',{}\\),**s.get\\('devDependencies',{}\\)}; [print\\(k,deps[k]\\) for k in deps if 'remotion' in k]\")",
+      "Bash(npx remotion *)",
+      "Bash(python -c \"import sys,json; s=json.load\\(sys.stdin\\); deps={**s.get\\('dependencies',{}\\),**s.get\\('devDependencies',{}\\)}; print\\(json.dumps\\(deps, indent=2\\)\\)\")",
+      "Bash(npm install *)"
     ]
   }
 }

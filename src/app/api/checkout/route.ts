@@ -32,7 +32,13 @@ export interface CheckoutBody {
 export async function POST(req: NextRequest) {
   const body: CheckoutBody = await req.json();
   const { currency, items, customer, deliveryFee } = body;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+
+  // Derive base URL from the incoming request so it works on any domain
+  // without relying on NEXT_PUBLIC_BASE_URL being set correctly in production.
+  const origin = req.headers.get("origin") || req.headers.get("referer") || "";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    ? process.env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, "")
+    : new URL(origin).origin;
 
   if (currency === "NGN") {
     return handlePaystack(items, customer, deliveryFee, baseUrl);
