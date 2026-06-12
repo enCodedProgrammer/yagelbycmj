@@ -12,7 +12,11 @@
       "Bash(python -c \"import sys,json; s=json.load\\(sys.stdin\\); deps={**s.get\\('dependencies',{}\\),**s.get\\('devDependencies',{}\\)}; [print\\(k,deps[k]\\) for k in deps if 'remotion' in k]\")",
       "Bash(npx remotion *)",
       "Bash(python -c \"import sys,json; s=json.load\\(sys.stdin\\); deps={**s.get\\('dependencies',{}\\),**s.get\\('devDependencies',{}\\)}; print\\(json.dumps\\(deps, indent=2\\)\\)\")",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "WebFetch(domain:impeccable.style)",
+      "WebFetch(domain:emilkowalski.com)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }

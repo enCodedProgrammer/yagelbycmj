@@ -12,7 +12,7 @@ export default function Home() {
       <MaskHeroSection />
       <AboutSection />
       <ProductsSection />
-      <AdSection />
+
       <GallerySection />
       <TestimonialsSection />
       <CTASection />

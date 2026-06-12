@@ -16,13 +16,13 @@ export default function ProductsSection() {
   useEffect(() => {
     if (!isInView || !gridRef.current) return;
     const cards = gridRef.current.querySelectorAll<HTMLElement>(".product-card");
-    gsap.set(cards, { y: 60, opacity: 0 });
+    gsap.set(cards, { y: 20, opacity: 0 });
     gsap.to(cards, {
       y: 0,
       opacity: 1,
-      duration: 1,
+      duration: 0.55,
       ease: "power3.out",
-      stagger: 0.2,
+      stagger: 0.08,
     });
   }, [isInView]);
 
@@ -30,23 +30,23 @@ export default function ProductsSection() {
     <section
       id="collection"
       ref={sectionRef}
-      className="relative py-8 md:py-24 overflow-hidden"
+      className="relative py-16 md:py-24 overflow-hidden"
     >
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Section header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-14">
           <motion.span
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="inline-block text-xs tracking-[0.4em] uppercase text-gold/60 mb-4"
+            transition={{ duration: 0.4 }}
+            className="inline-block text-xs tracking-[0.4em] uppercase text-gold/60 mb-3"
           >
             The Collection
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.06 }}
             className="font-heading text-3xl sm:text-4xl md:text-5xl tracking-wide text-foreground"
           >
             Choose Your{" "}
@@ -72,12 +72,12 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <div className="product-card">
       <Link href={`/product/${product.slug}`} className="group block">
-        <div className="overflow-hidden border border-border/50 transition-all duration-700 group-hover:border-gold/30 group-hover:shadow-[0_0_60px_oklch(0.78_0.08_75_/_0.15)]">
+        <div className="overflow-hidden border border-border/50 transition-[border-color,box-shadow] duration-300 group-hover:border-gold/30 group-hover:shadow-[0_0_48px_oklch(0.78_0.08_75_/_0.12)]">
 
           {/* Image area */}
           <div className="relative flex items-center justify-center overflow-hidden" style={{ aspectRatio: "4/5", background: "#2d0a14" }}>
             {/* Radial gold glow behind bottle */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_55%,_rgba(196,168,120,0.12)_0%,_transparent_70%)] group-hover:bg-[radial-gradient(ellipse_60%_55%_at_50%_55%,_rgba(196,168,120,0.22)_0%,_transparent_70%)] transition-all duration-700" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_55%,_rgba(196,168,120,0.12)_0%,_transparent_70%)] group-hover:bg-[radial-gradient(ellipse_60%_55%_at_50%_55%,_rgba(196,168,120,0.22)_0%,_transparent_70%)] transition-[background] duration-300" />
 
             {/* Gender tag */}
             <div className="absolute top-5 left-5 z-20">
@@ -88,8 +88,9 @@ function ProductCard({ product }: { product: Product }) {
 
             {/* Bottle image */}
             <motion.div
-              whileHover={{ scale: 1.06 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
               className="relative z-10"
             >
               <Image
@@ -103,7 +104,7 @@ function ProductCard({ product }: { product: Product }) {
           </div>
 
           {/* Info strip */}
-          <div className="bg-background border-t border-border/30 px-6 py-5 flex items-center justify-between gap-4">
+          <div className="bg-background border-t border-border/30 px-6 py-4 flex items-center justify-between gap-4">
             <div>
               <h3 className="font-heading text-xl sm:text-2xl text-foreground tracking-wide leading-tight">
                 {product.name}
@@ -117,7 +118,7 @@ function ProductCard({ product }: { product: Product }) {
               <p className="font-heading text-xl sm:text-2xl text-gold">
                 {formatPrice(price, country.currency)}
               </p>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 mt-1 group-hover:text-gold/60 transition-colors duration-300">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50 mt-1 group-hover:text-gold/60 transition-[color] duration-200">
                 Explore →
               </p>
             </div>

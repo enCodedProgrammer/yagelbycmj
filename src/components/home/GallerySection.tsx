@@ -73,9 +73,9 @@ export default function GallerySection() {
   };
 
   return (
-    <section className="py-8 md:py-24 bg-background overflow-hidden">
+    <section className="py-16 md:py-24 bg-background overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 md:px-12 mb-8 md:mb-10">
+      <div className="flex items-center justify-between px-6 md:px-12 mb-8 md:mb-12">
         <div>
           <p className="text-[10px] tracking-[0.4em] uppercase text-gold/50 mb-2">
             The Collection
@@ -91,7 +91,7 @@ export default function GallerySection() {
             onClick={() => scrollBy("left")}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
-            className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-all duration-300 disabled:opacity-20 disabled:pointer-events-none"
+            className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-[border-color,color] duration-200 disabled:opacity-20 disabled:pointer-events-none"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -99,7 +99,7 @@ export default function GallerySection() {
             onClick={() => scrollBy("right")}
             disabled={!canScrollRight}
             aria-label="Scroll right"
-            className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-all duration-300 disabled:opacity-20 disabled:pointer-events-none"
+            className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-[border-color,color] duration-200 disabled:opacity-20 disabled:pointer-events-none"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -132,7 +132,7 @@ export default function GallerySection() {
               src={item.src}
               alt={item.alt}
               fill
-              className="object-cover transition-transform duration-700 hover:scale-105"
+              className="object-cover transition-transform duration-300 hover:scale-[1.04]"
               sizes="(max-width: 768px) 200px, 360px"
               draggable={false}
             />

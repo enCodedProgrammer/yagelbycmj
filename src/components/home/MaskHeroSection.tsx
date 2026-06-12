@@ -406,17 +406,21 @@ export default function MaskHeroSection() {
           <div ref={btnsRef} style={{ opacity: 0, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: isMobileView ? 12 : 20, pointerEvents: "auto" }}>
             <Link
               href="/collection"
-              style={{ display: "inline-block", padding: "16px 40px", background: "#C4A878", color: "#0d0d0d", fontFamily: "var(--font-condensed), sans-serif", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", transition: "box-shadow 0.4s" }}
+              style={{ display: "inline-block", padding: "16px 40px", background: "#C4A878", color: "#0d0d0d", fontFamily: "var(--font-condensed), sans-serif", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", transition: "box-shadow 0.2s ease-out, transform 0.15s ease-out" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 40px rgba(196,168,120,0.4)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none"; (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)"; }}
+              onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.transform = "scale(0.97)"; }}
+              onMouseUp={(e) => { (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)"; }}
             >
               Explore Collection
             </Link>
             <Link
               href="/collection"
-              style={{ display: "inline-block", padding: "16px 40px", background: "transparent", color: "#C4A878", border: "1px solid rgba(196,168,120,0.35)", fontFamily: "var(--font-condensed), sans-serif", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", transition: "box-shadow 0.4s" }}
+              style={{ display: "inline-block", padding: "16px 40px", background: "transparent", color: "#C4A878", border: "1px solid rgba(196,168,120,0.35)", fontFamily: "var(--font-condensed), sans-serif", fontSize: 13, fontWeight: 500, letterSpacing: "0.2em", textTransform: "uppercase", textDecoration: "none", transition: "box-shadow 0.2s ease-out, transform 0.15s ease-out" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 8px 40px rgba(196,168,120,0.2)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.boxShadow = "none"; (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)"; }}
+              onMouseDown={(e) => { (e.currentTarget as HTMLAnchorElement).style.transform = "scale(0.97)"; }}
+              onMouseUp={(e) => { (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)"; }}
             >
               Buy Now
             </Link>

@@ -55,20 +55,20 @@ function TestimonialCard({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay }}
-      className="relative bg-card/30 border border-border/30 p-8 backdrop-blur-sm hover:border-gold/20 transition-all duration-500"
+      transition={{ duration: 0.5, delay }}
+      className="relative bg-card/30 border border-border/30 p-6 backdrop-blur-sm hover:border-gold/20 transition-[border-color] duration-200"
     >
       <span className="absolute top-4 right-6 font-heading text-6xl text-gold/10">
         &ldquo;
       </span>
-      <div className="flex gap-1 mb-4">
+      <div className="flex gap-0.5 mb-3">
         {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+          <Star key={i} className="w-3.5 h-3.5 fill-gold text-gold" />
         ))}
       </div>
-      <p className="text-sm text-foreground/60 leading-relaxed mb-6 italic">
+      <p className="text-sm text-foreground/60 leading-relaxed mb-5 italic">
         &ldquo;{text}&rdquo;
       </p>
       <div className="pt-4 border-t border-border/20">
@@ -111,23 +111,23 @@ export default function TestimonialsSection() {
         }));
 
   return (
-    <section ref={ref} className="relative py-32 md:py-40 overflow-hidden">
+    <section ref={ref} className="relative py-20 md:py-28 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--gold)_0%,_transparent_60%)] opacity-[0.03]" />
 
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
+        <div className="text-center mb-14">
           <motion.span
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="inline-block text-xs tracking-[0.4em] uppercase text-gold/60 mb-4"
+            transition={{ duration: 0.4 }}
+            className="inline-block text-xs tracking-[0.4em] uppercase text-gold/60 mb-3"
           >
             Testimonials
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.06 }}
             className="font-heading text-3xl sm:text-4xl md:text-5xl tracking-wide text-foreground"
           >
             What They{" "}
@@ -143,7 +143,7 @@ export default function TestimonialsSection() {
               sub={card.sub}
               rating={card.rating}
               text={card.text}
-              delay={0.3 + i * 0.15}
+              delay={i * 0.07}
               isInView={isInView}
             />
           ))}
