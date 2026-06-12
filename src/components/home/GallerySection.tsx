@@ -73,7 +73,7 @@ export default function GallerySection() {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-background overflow-hidden">
+    <section className="py-8 md:py-24 bg-background overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-6 md:px-12 mb-8 md:mb-10">
         <div>

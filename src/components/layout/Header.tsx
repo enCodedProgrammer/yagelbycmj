@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
@@ -10,6 +11,8 @@ import { useCountry } from "@/lib/country-context";
 export default function Header() {
   const { totalItems, setIsOpen } = useCart();
   const { country } = useCountry();
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pastHero, setPastHero] = useState(false);
 
@@ -29,7 +32,7 @@ export default function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500 ${
-        pastHero
+        !isHomepage || pastHero
           ? "bg-background/80 backdrop-blur-xl border-border/50"
           : "bg-transparent backdrop-blur-none border-transparent"
       }`}
@@ -93,7 +96,7 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className={`md:hidden border-b transition-colors duration-500 ${pastHero ? "bg-background/95 backdrop-blur-xl border-border/50" : "bg-black/40 backdrop-blur-md border-transparent"}`}
+            className={`md:hidden border-b transition-colors duration-500 ${!isHomepage || pastHero ? "bg-background/95 backdrop-blur-xl border-border/50" : "bg-black/40 backdrop-blur-md border-transparent"}`}
           >
             <nav className="flex flex-col items-center gap-6 py-8">
               <MobileNavLink

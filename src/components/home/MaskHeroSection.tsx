@@ -145,11 +145,12 @@ const PALETTES: [number, number, number][] = [
 export default function MaskHeroSection() {
   const sectionRef  = useRef<HTMLElement>(null);
   const canvasRef   = useRef<HTMLCanvasElement>(null);
-  const subheadRef  = useRef<HTMLDivElement>(null);
-  const overlineRef = useRef<HTMLDivElement>(null);
-  const headingRef  = useRef<HTMLDivElement>(null);
-  const taglineRef  = useRef<HTMLDivElement>(null);
-  const btnsRef     = useRef<HTMLDivElement>(null);
+  const subheadRef    = useRef<HTMLDivElement>(null);
+  const overlineRef   = useRef<HTMLDivElement>(null);
+  const headingRef    = useRef<HTMLDivElement>(null);
+  const taglineRef    = useRef<HTMLDivElement>(null);
+  const btnsRef       = useRef<HTMLDivElement>(null);
+  const darkOverlayRef = useRef<HTMLDivElement>(null);
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
@@ -306,6 +307,7 @@ export default function MaskHeroSection() {
       tl.to(subheadRef.current, { opacity: 0, duration: 0.5, ease: "none" }, 0);
       tl.to(canvas, { opacity: 0, duration: 1, ease: "power2.in" }, fadeStart);
 
+      tl.fromTo(darkOverlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.5 }, revealAt);
       tl.fromTo(overlineRef.current, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, revealAt);
       tl.fromTo(headingRef.current,  { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, revealAt + 0.15);
       tl.fromTo(taglineRef.current,  { opacity: 0 },        { opacity: 1,        duration: 0.35 }, revealAt + 0.3);
@@ -347,8 +349,11 @@ export default function MaskHeroSection() {
           style={{ position: "absolute", top: 0, left: 0, zIndex: 2, willChange: "transform, opacity" }}
         />
 
+        {/* Dark overlay — fades in with text reveal to ensure legibility over the video */}
+        <div ref={darkOverlayRef} style={{ position: "absolute", inset: 0, zIndex: 3, background: "rgba(0,0,0,0.52)", opacity: 0, pointerEvents: "none" }} />
+
         {/* Corner labels */}
-        <div ref={subheadRef} style={{ position: "absolute", inset: 0, zIndex: 3, pointerEvents: "none" }}>
+        <div ref={subheadRef} style={{ position: "absolute", inset: 0, zIndex: 4, pointerEvents: "none" }}>
           <div style={{ position: "absolute", top: 32, left: 40, fontFamily: "var(--font-condensed), sans-serif", fontSize: 11, fontWeight: 400, letterSpacing: "0.35em", textTransform: "uppercase", color: "#F5F3ED", opacity: 0.55 }}>
           
           </div>
@@ -358,7 +363,7 @@ export default function MaskHeroSection() {
         </div>
 
         {/* Hero reveal — appears at 96% scroll */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 5, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px", pointerEvents: "none" }}>
+        <div style={{ position: "absolute", inset: 0, zIndex: 6, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px", pointerEvents: "none" }}>
 
           <FloatingParticles color="#c4a878" />
 

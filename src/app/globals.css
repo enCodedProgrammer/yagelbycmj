@@ -145,11 +145,12 @@ html, body, *, *::before, *::after {
 }
 
 /* Mask hero section height — shorter on mobile so zoom completes faster */
+/* Extra 60px gives breathing room after text/buttons reveal before next section */
 .mask-hero-section {
-  height: 300vh;
+  height: calc(300vh + 60px);
 }
 @media (min-width: 768px) {
   .mask-hero-section {
-    height: 500vh;
+    height: calc(500vh + 60px);
   }
 }

@@ -30,7 +30,7 @@ export default function ProductsSection() {
     <section
       id="collection"
       ref={sectionRef}
-      className="relative py-32 md:py-40 overflow-hidden"
+      className="relative py-8 md:py-24 overflow-hidden"
     >
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Section header */}
