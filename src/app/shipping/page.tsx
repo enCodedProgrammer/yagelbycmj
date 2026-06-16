@@ -94,7 +94,7 @@ export default function ShippingPage() {
                     when you select your location.
                   </p>
                 </div>
-                <span className="text-sm text-gold whitespace-nowrap">₦3,000 – ₦6,000</span>
+                <span className="text-sm text-gold whitespace-nowrap">₦4,000 – ₦6,000</span>
               </div>
               <div className="p-6 flex items-start justify-between gap-4">
                 <div>
