@@ -111,7 +111,7 @@ function ProductCard({ product }: { product: Product }) {
                 <span className="text-gold ml-2 text-base italic">{product.tagline}</span>
               </h3>
               <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground/60 mt-1">
-                {product.type}
+                {product.type} · {product.volume}
               </p>
             </div>
             <div className="text-right shrink-0">

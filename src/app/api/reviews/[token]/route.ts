@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdmin, getSupabase } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +41,8 @@ export async function POST(
     return NextResponse.json({ error: "Comment is required" }, { status: 400 });
   }
 
-  // Check token exists and not already submitted
-  const { data: existing } = await getSupabase()
+  // Check token exists and not already submitted (admin: unsubmitted rows are hidden by RLS)
+  const { data: existing } = await getSupabaseAdmin()
     .from("reviews")
     .select("submitted_at")
     .eq("review_token", token)

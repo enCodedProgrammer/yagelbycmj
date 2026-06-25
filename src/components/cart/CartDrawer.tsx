@@ -99,7 +99,7 @@ export default function CartDrawer() {
                           {item.name}
                         </h3>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          Extrait de Parfum
+                          Extrait de Parfum · 50 ml
                         </p>
                         <p className="text-sm text-gold mt-2">
                           {formatPrice(

@@ -126,61 +126,31 @@ export interface LagosZone {
 
 
 const OYO_FEE = 3000;
-const OGUN_FEE = 4500
+const OGUN_FEE = 4500;
 
-// Other states are tiered by road distance from Lagos.
-export interface StateTier {
-  id: string;
+// We currently deliver within Nigeria only to Lagos, Oyo, and Ogun (Abeokuta).
+export const DELIVERABLE_STATES = ["Lagos", "Ogun", "Oyo"];
+
+// Display list for the /shipping page — single source of truth for the fees.
+export interface DeliveryFeeRow {
   label: string;
-  description: string;
   fee: number; // NGN
-  states: string[];
 }
 
-
-
-export const STATE_TIERS: StateTier[] = [
-  {
-    id: "near",
-    label: "South West",
-    description: "States neighbouring Lagos",
-    fee: 5500,
-    states: ["Osun", "Ondo", "Ekiti", "Kwara"],
-  },
-  {
-    id: "mid",
-    label: "South & Central",
-    description: "South-South, South-East and North-Central states",
-    fee: 12500,
-    states: [
-      "Abia", "Akwa Ibom", "Anambra", "Bayelsa", "Benue", "Cross River",
-      "Delta", "Ebonyi", "Edo", "Enugu", "FCT (Abuja)", "Imo", "Kogi",
-      "Nasarawa", "Niger", "Plateau", "Rivers",
-    ],
-  },
-  {
-    id: "far",
-    label: "Northern States",
-    description: "North-West and North-East states",
-    fee: 16500,
-    states: [
-      "Adamawa", "Bauchi", "Borno", "Gombe", "Jigawa", "Kaduna", "Kano",
-      "Katsina", "Kebbi", "Sokoto", "Taraba", "Yobe", "Zamfara",
-    ],
-  },
+export const NIGERIA_DELIVERY_FEES: DeliveryFeeRow[] = [
+  { label: "Lagos Mainland", fee: LAGOS_ZONES.find((z) => z.id === "mainland")!.fee },
+  { label: "Lagos Island", fee: LAGOS_ZONES.find((z) => z.id === "Island")!.fee },
+  { label: "Oyo", fee: OYO_FEE },
+  { label: "Abeokuta", fee: OGUN_FEE },
 ];
 
 export function getLagosZoneByArea(area: string): LagosZone | undefined {
   return LAGOS_ZONES.find((z) => z.areas.includes(area));
 }
 
-export function getStateTier(state: string): StateTier | undefined {
-  return STATE_TIERS.find((t) => t.states.includes(state));
-}
-
 /**
- * Returns the delivery fee in NGN, or null when more input is needed
- * (Lagos selected but no area chosen yet, or unknown state).
+ * Returns the delivery fee in NGN, or null when we don't deliver there or more
+ * input is needed (Lagos selected but no area chosen yet).
  */
 export function getNigerianDeliveryFee(
   state: string,
@@ -192,5 +162,5 @@ export function getNigerianDeliveryFee(
     if (!lagosArea) return null;
     return getLagosZoneByArea(lagosArea)?.fee ?? null;
   }
-  return getStateTier(state)?.fee ?? null;
+  return null;
 }

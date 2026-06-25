@@ -266,9 +266,9 @@ export default function ProductPage() {
               </span>
             </h1>
 
-            {/* Type */}
+            {/* Type + volume */}
             <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-6">
-              {product.type}
+              {product.type} · {product.volume}
             </p>
 
             {/* Signature feel */}

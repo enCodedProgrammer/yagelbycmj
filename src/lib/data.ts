@@ -9,6 +9,7 @@ export interface Product {
   name: string;
   slug: string;
   type: string;
+  volume: string;
   tagline: string;
   description: string;
   signatureFeel: string;
@@ -69,6 +70,7 @@ export const products: Product[] = [
     name: "Yagel",
     slug: "yagel-for-her",
     type: "Extrait de Parfum",
+    volume: "50 ml",
     tagline: "For Her",
     description:
       "A vibrant opening of citrus, orange, and soft fruity notes is elevated by a touch of saffron. The heart unfolds into a luxurious blend of rose, jasmine, and creamy white florals, wrapped in indulgent hints of chocolate and caramel. It settles into a warm, lasting base of vanilla, oud, amber, and musk, leaving a soft yet powerful trail of elegance.",
@@ -79,8 +81,8 @@ export const products: Product[] = [
       base: "Vanilla, Oud, Amber, Musk",
     },
     prices: {
-      GBP: 34.99,
-      USD: 34.99,
+      GBP: 29.99,
+      USD: 29.99,
       NGN: 30000,
     },
     image: "/images/yagel-f.jpeg",
@@ -96,6 +98,7 @@ export const products: Product[] = [
     name: "Yagel",
     slug: "yagel-for-him",
     type: "Extrait de Parfum",
+    volume: "50 ml",
     tagline: "For Him",
     description:
       "A bold opening of mango and citrus is sharpened by ginger and warm spices. The heart reveals a refined blend of woods, patchouli, soft florals, and resin, adding depth and character. It settles into a rich, smoky base of ambergris, amberwood, oud, musk, incense, and vanilla leaving a powerful, lasting impression.",
@@ -106,8 +109,8 @@ export const products: Product[] = [
       base: "Ambergris, Amberwood, Oud, Musk, Incense, Vanilla",
     },
     prices: {
-      GBP: 34.99,
-      USD: 34.99,
+      GBP: 29.99,
+      USD: 29.99,
       NGN: 30000,
     },
     image: "/images/yagel-m.jpeg",

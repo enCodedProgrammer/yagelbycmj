@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Truck, Clock, Package, Globe, MapPin } from "lucide-react";
 import { countries } from "@/lib/data";
-import { STATE_TIERS } from "@/lib/delivery";
+import { NIGERIA_DELIVERY_FEES } from "@/lib/delivery";
 
 export default function ShippingPage() {
   return (
@@ -86,42 +86,18 @@ export default function ShippingPage() {
               </h2>
             </div>
             <div className="bg-card/30 border border-border/30 divide-y divide-border/20">
-              <div className="p-6 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-sm font-medium text-foreground mb-1">Lagos</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Fee depends on your delivery area — calculated at checkout
-                    when you select your location.
-                  </p>
-                </div>
-                <span className="text-sm text-gold whitespace-nowrap">₦4,000 – ₦6,000</span>
-              </div>
-              <div className="p-6 flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="text-sm font-medium text-foreground mb-1">Oyo State</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Flat rate to any location within Oyo.
-                  </p>
-                </div>
-                <span className="text-sm text-gold whitespace-nowrap">₦3,000</span>
-              </div>
-              {STATE_TIERS.map((tier) => (
-                <div key={tier.id} className="p-6 flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-foreground mb-1">{tier.label}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {tier.description}: {tier.states.join(", ")}.
-                    </p>
-                  </div>
+              {NIGERIA_DELIVERY_FEES.map((row) => (
+                <div key={row.label} className="p-6 flex items-center justify-between gap-4">
+                  <h3 className="text-sm font-medium text-foreground">{row.label}</h3>
                   <span className="text-sm text-gold whitespace-nowrap">
-                    ₦{tier.fee.toLocaleString()}
+                    ₦{row.fee.toLocaleString()}
                   </span>
                 </div>
               ))}
             </div>
             <p className="text-xs text-muted-foreground/60 mt-3">
-              Fees within Nigeria are based on distance from our Lagos dispatch
-              station and are calculated automatically at checkout.
+              We currently deliver within Lagos, Oyo, and Abeokuta only. Your fee
+              is calculated automatically at checkout.
             </p>
           </motion.div>
 

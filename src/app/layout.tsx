@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Oswald } from "next/font/google";
+import { Playfair_Display, Inter, Oswald, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { CountryProvider } from "@/lib/country-context";
 import { CartProvider } from "@/lib/cart-context";
@@ -28,6 +28,13 @@ const oswald = Oswald({
   display: "swap",
 });
 
+const cormorant = Cormorant_Garamond({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Yagel | A Signature of Elegance and Presence",
   description:
@@ -42,7 +49,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${inter.variable} ${oswald.variable} h-full antialiased`}
+      className={`${playfair.variable} ${inter.variable} ${oswald.variable} ${cormorant.variable} h-full antialiased`}
       style={{ cursor: "none" }}
     >
       <body className="min-h-full flex flex-col font-sans">

@@ -263,7 +263,7 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
                 {phase >= 1 && (
                   <p className="text-sm">
                     <TypewriterText
-                      text="Yagel was created with one purpose — to capture identity through scent. We believe fragrance is more than something you wear. It is presence. It is memory. It is how you are remembered long after you've gone."
+                      text="Yagel was created with one purpose - to capture identity through scent. We believe fragrance is more than something you wear. It is presence. It is memory. It is how you are remembered long after you've gone."
                       started={phase >= 1}
                       speed={0.2}
                       onComplete={advancePhase}
@@ -276,7 +276,7 @@ useMotionValueEvent(scrollYProgress, "change", (v) => {
                 {phase >= 2 && (
                   <p className="text-sm">
                     <TypewriterText
-                      text="Each Yagel fragrance is carefully crafted to balance elegance, warmth, and depth — creating scents that feel personal, confident, and unforgettable."
+                      text="Each Yagel fragrance is carefully crafted to balance elegance, warmth, and depth - creating scents that feel personal, confident, and unforgettable."
                       started={phase >= 2}
                       speed={0.2}
                       onComplete={advancePhase}

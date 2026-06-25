@@ -8,16 +8,10 @@ import { ArrowLeft, ShoppingBag, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useCountry } from "@/lib/country-context";
 import { formatPrice } from "@/lib/data";
-import { LAGOS_ZONES, getNigerianDeliveryFee } from "@/lib/delivery";
+import { LAGOS_ZONES, DELIVERABLE_STATES, getNigerianDeliveryFee } from "@/lib/delivery";
 
-const NIGERIAN_STATES = [
-  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa",
-  "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo",
-  "Ekiti", "Enugu", "FCT (Abuja)", "Gombe", "Imo", "Jigawa",
-  "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara",
-  "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun",
-  "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara",
-];
+// We currently deliver only to Lagos, Ogun, and Oyo.
+const NIGERIAN_STATES = DELIVERABLE_STATES;
 
 export default function CheckoutPage() {
   const { items, totalItems } = useCart();

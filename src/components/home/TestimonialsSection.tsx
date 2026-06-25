@@ -14,30 +14,6 @@ interface Review {
   submitted_at: string;
 }
 
-const STATIC_TESTIMONIALS = [
-  {
-    name: "Sophia M.",
-    location: "London, UK",
-    rating: 5,
-    text: "I've never received so many compliments on a fragrance. Yagel for Her is absolutely divine — it lasts all day and transitions beautifully from morning to evening.",
-    product: "Yagel (For Her)",
-  },
-  {
-    name: "David A.",
-    location: "Lagos, Nigeria",
-    rating: 5,
-    text: "Bold, warm, and unforgettable. Every time I wear Yagel, someone asks what I'm wearing. It's become my signature scent.",
-    product: "Yagel (For Him)",
-  },
-  {
-    name: "Emma R.",
-    location: "New York, US",
-    rating: 5,
-    text: "The packaging alone feels luxurious, but the scent is on another level. Sweet without being overpowering — pure elegance in a bottle.",
-    product: "Yagel (For Her)",
-  },
-];
-
 function TestimonialCard({
   name,
   sub,
@@ -82,7 +58,7 @@ function TestimonialCard({
 export default function TestimonialsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [reviews, setReviews] = useState<Review[] | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     fetch("/api/reviews")
@@ -95,20 +71,15 @@ export default function TestimonialsSection() {
       .catch(() => {});
   }, []);
 
-  const cards =
-    reviews !== null
-      ? reviews.map((r) => ({
-          name: r.reviewer_name || "Anonymous",
-          sub: r.product_name,
-          rating: r.rating,
-          text: r.comment,
-        }))
-      : STATIC_TESTIMONIALS.map((t) => ({
-          name: t.name,
-          sub: `${t.location} · ${t.product}`,
-          rating: t.rating,
-          text: t.text,
-        }));
+  // Only show the section once at least one real review exists in Supabase.
+  if (reviews.length === 0) return null;
+
+  const cards = reviews.map((r) => ({
+    name: r.reviewer_name || "Anonymous",
+    sub: r.product_name,
+    rating: r.rating,
+    text: r.comment,
+  }));
 
   return (
     <section ref={ref} className="relative py-20 md:py-28 overflow-hidden">

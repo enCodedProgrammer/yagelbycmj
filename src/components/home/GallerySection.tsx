@@ -9,7 +9,7 @@ const GALLERY_ITEMS = [
   { src: "/story/035AD806-64CD-49C6-B0E9-A44961D04C43.png",   alt: "Both — Roses" },
   { src: "/story/4F0AA910-F278-4E57-80A1-C6200F4017C3.png",   alt: "For Her — Hands" },
   { src: "/story/8C4270F2-ADD4-472D-9022-D3DFAFE8CCC2.png",   alt: "Both — Notes" },
-  { src: "/story/_DSC3958.jpeg",                               alt: "For Him — Portrait" },
+  { src: "/story-old/_DSC3958.jpeg",                               alt: "For Him — Portrait" },
   { src: "/story/491029B2-5C93-4273-BF67-3C3F2C9E3A50.png",   alt: "Both — Gold Satin" },
   { src: "/story/4C93DCC8-FCD5-4722-A0F2-6D5DE1DB94E2.png",   alt: "For Him — Uncap" },
   { src: "/story/AB1A8EAC-2553-4107-ADD3-4E7509CA3C75.png",   alt: "For Him — Flat Lay" },

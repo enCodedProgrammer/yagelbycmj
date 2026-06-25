@@ -136,7 +136,7 @@ function CollectionCard({ product }: { product: Product }) {
                 <span className="text-gold ml-2 text-base italic">{product.tagline}</span>
               </h2>
               <p className="text-[11px] tracking-[0.2em] uppercase text-muted-foreground/60 mt-1">
-                {product.type}
+                {product.type} · {product.volume}
               </p>
             </div>
             <p className="font-heading text-xl sm:text-2xl text-gold shrink-0">

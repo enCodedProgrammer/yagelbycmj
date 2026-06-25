@@ -169,6 +169,15 @@ export default function MaskHeroSection() {
 
     const isMobile = window.innerWidth < 768;
 
+    // Resolve the hashed next/font family name (canvas can't read CSS vars) and
+    // ensure it's loaded so the punch-out doesn't fall back on first frames.
+    const probe = document.createElement("span");
+    probe.style.fontFamily = "var(--font-display)";
+    document.body.appendChild(probe);
+    const displayFamily = getComputedStyle(probe).fontFamily || "Georgia, serif";
+    probe.remove();
+    document.fonts.load(`600 200px ${displayFamily}`).catch(() => {});
+
     let rafId: number;
     let gsapCleanup: (() => void) | null = null;
 
@@ -247,12 +256,14 @@ export default function MaskHeroSection() {
 
       // Punch out YAGEL so the video shows through the letter shapes
       ctx.globalCompositeOperation = "destination-out";
-      const fontSize = Math.round(w * 0.2);
-      ctx.font          = `700 ${fontSize}px Oswald, Impact, sans-serif`;
+      const fontSize = Math.round(w * 0.14);
+      ctx.font          = `600 ${fontSize}px ${displayFamily}`;
+      ctx.letterSpacing = "0.04em";
       ctx.textAlign     = "center";
       ctx.textBaseline  = "middle";
       ctx.fillStyle     = "#000";
       ctx.fillText("YAGEL", w / 2, h / 2);
+      ctx.letterSpacing = "0px";
       ctx.globalCompositeOperation = "source-over";
 
       rafId = requestAnimationFrame(draw);
