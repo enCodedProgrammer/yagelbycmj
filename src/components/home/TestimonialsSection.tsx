@@ -123,7 +123,7 @@ export default function TestimonialsSection({ reviews }: { reviews: Review[] }) 
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--gold)_0%,_transparent_60%)] opacity-[0.03]" />
 
       {/* Header */}
-      <div className="relative flex items-end justify-between px-6 md:px-12 mb-8 md:mb-12">
+      <div className="relative flex flex-col items-center text-center gap-4 md:flex-row md:items-end md:justify-between md:text-left md:gap-0 px-6 md:px-12 mb-8 md:mb-12">
         <div>
           <p className="text-[10px] tracking-[0.4em] uppercase text-gold/50 mb-2">
             Testimonials
@@ -133,31 +133,36 @@ export default function TestimonialsSection({ reviews }: { reviews: Review[] }) 
           </h2>
         </div>
 
-        {/* Nav buttons — desktop only */}
-        <div className="hidden md:flex items-center gap-3">
-          <button
-            onClick={() => scrollByDir("left")}
-            disabled={!canScrollLeft}
-            aria-label="Scroll left"
-            className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-[border-color,color] duration-200 disabled:opacity-20 disabled:pointer-events-none"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => scrollByDir("right")}
-            disabled={!canScrollRight}
-            aria-label="Scroll right"
-            className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-[border-color,color] duration-200 disabled:opacity-20 disabled:pointer-events-none"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+        {/* Nav buttons — desktop only, and only when there's something to scroll */}
+        {cards.length > 1 && (
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => scrollByDir("left")}
+              disabled={!canScrollLeft}
+              aria-label="Scroll left"
+              className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-[border-color,color] duration-200 disabled:opacity-20 disabled:pointer-events-none"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollByDir("right")}
+              disabled={!canScrollRight}
+              aria-label="Scroll right"
+              className="w-10 h-10 flex items-center justify-center border border-gold/20 text-gold/60 hover:border-gold/60 hover:text-gold transition-[border-color,color] duration-200 disabled:opacity-20 disabled:pointer-events-none"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Scrollable track */}
+      {/* Scrollable track — a lone testimonial is centered on desktop; multiple
+          align left and become a swipeable carousel. */}
       <div
         ref={trackRef}
-        className="relative flex gap-4 overflow-x-auto px-6 md:px-12 pb-4 items-stretch"
+        className={`relative flex gap-4 overflow-x-auto px-6 md:px-12 pb-4 items-stretch ${
+          cards.length === 1 ? "justify-center md:justify-center" : ""
+        }`}
         style={{
           cursor: "grab",
           scrollbarWidth: "none",

@@ -75,7 +75,7 @@ export default function GallerySection() {
   return (
     <section className="py-16 md:py-24 bg-background overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 md:px-12 mb-8 md:mb-12">
+      <div className="flex flex-col items-center text-center gap-4 md:flex-row md:items-center md:justify-between md:text-left md:gap-0 px-6 md:px-12 mb-8 md:mb-12">
         <div>
           <p className="text-[10px] tracking-[0.4em] uppercase text-gold/50 mb-2">
             The Collection
