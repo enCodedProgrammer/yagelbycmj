@@ -254,9 +254,11 @@ export default function MaskHeroSection() {
       ctx.imageSmoothingQuality    = "high";
       ctx.drawImage(offscreen, 0, 0, w, h);
 
-      // Punch out YAGEL so the video shows through the letter shapes
+      // Punch out YAGEL so the video shows through the letter shapes.
+      // On narrow (mobile) widths the word fills much more of the screen so it
+      // reads boldly instead of looking small and insignificant.
       ctx.globalCompositeOperation = "destination-out";
-      const fontSize = Math.round(w * 0.14);
+      const fontSize = Math.round(w * (w < 768 ? 0.26 : 0.14));
       ctx.font          = `600 ${fontSize}px ${displayFamily}`;
       ctx.letterSpacing = "0.04em";
       ctx.textAlign     = "center";
