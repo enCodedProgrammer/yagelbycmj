@@ -77,6 +77,9 @@ async function handleStripe(
         product_data: {
           name: item.name,
           images: item.image.startsWith("http") ? [item.image] : [],
+          // Carry the catalog id so the webhook can map line items back to our
+          // products (Stripe otherwise generates its own prod_… id).
+          metadata: { product_id: item.productId },
         },
       },
       quantity: item.quantity,

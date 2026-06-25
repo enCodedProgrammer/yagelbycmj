@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { createReviewToken, sendReviewEmail } from "@/lib/reviews";
+import { createReviewToken } from "@/lib/reviews";
+import { sendOrderConfirmationEmail, sendReviewEmail } from "@/lib/emails";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,9 @@ export async function POST(req: NextRequest) {
     .digest("hex");
 
   if (hash !== req.headers.get("x-paystack-signature")) {
+    // A mismatch usually means PAYSTACK_SECRET_KEY differs from the one Paystack
+    // signs with — log it so it isn't silently swallowed.
+    console.error("[paystack] webhook signature verification failed");
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -23,6 +27,18 @@ export async function POST(req: NextRequest) {
     const meta = data.metadata ?? {};
     const cartItems: { product_id: string; name: string; quantity: number; unit_price: number }[] =
       meta.cart_items ?? [];
+
+    // Idempotency: Paystack may redeliver an event. If this reference is already
+    // recorded, acknowledge and stop so we don't duplicate the order or emails.
+    const { data: existing } = await getSupabaseAdmin()
+      .from("orders")
+      .select("id")
+      .eq("payment_reference", data.reference)
+      .maybeSingle();
+    if (existing) {
+      console.log("[paystack] order already processed for reference", data.reference);
+      return NextResponse.json({ received: true });
+    }
 
     const { data: order, error: orderError } = await getSupabaseAdmin()
       .from("orders")
@@ -48,33 +64,68 @@ export async function POST(req: NextRequest) {
     }
 
     if (cartItems.length > 0) {
-      await getSupabaseAdmin().from("order_items").insert(
-        cartItems.map((item) => ({
-          order_id: order.id,
-          product_id: item.product_id,
-          product_name: item.name,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-        }))
-      );
+      const { error: itemsError } = await getSupabaseAdmin()
+        .from("order_items")
+        .insert(
+          cartItems.map((item) => ({
+            order_id: order.id,
+            product_id: item.product_id,
+            product_name: item.name,
+            quantity: item.quantity,
+            unit_price: item.unit_price,
+          }))
+        );
+      if (itemsError) {
+        console.error("[paystack] order_items insert failed for order", order.id, itemsError);
+      }
 
-      // Create a review token per product and send review email
       const customerEmail = data.customer?.email;
       const customerName = meta.customer_name ?? "Customer";
       const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
       const proto = req.headers.get("x-forwarded-proto") || "https";
       const baseUrl = `${proto}://${host}`;
 
-      for (const item of cartItems) {
-        const token = await createReviewToken(
-          order.id,
-          item.product_id,
-          item.name,
-          customerName
-        );
+      // Emails/review tokens run after the order is safely persisted. Any failure
+      // here must NOT fail the webhook — a 5xx would make Paystack retry and the
+      // idempotency guard above would skip it, so the order would silently never
+      // get its emails. Log loudly and still return 200.
+      try {
+        // 1. Order confirmation email — sent immediately.
         if (customerEmail) {
-          await sendReviewEmail(customerEmail, customerName, token, item.name, baseUrl);
+          await sendOrderConfirmationEmail({
+            to: customerEmail,
+            name: customerName,
+            items: cartItems.map((i) => ({
+              name: i.name,
+              quantity: i.quantity,
+              unitPrice: i.unit_price,
+            })),
+            total: data.amount / 100,
+            currency: "NGN",
+            address: meta.address ?? "",
+            city: meta.city ?? "",
+            postalCode: meta.postal_code ?? "",
+            country: meta.country ?? "",
+            countryCode: meta.country_code ?? "",
+            reference: data.reference,
+          });
         }
+
+        // 2. Review request — scheduled for 3 days after purchase.
+        const reviewAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+        for (const item of cartItems) {
+          const token = await createReviewToken(
+            order.id,
+            item.product_id,
+            item.name,
+            customerName
+          );
+          if (customerEmail) {
+            await sendReviewEmail(customerEmail, customerName, token, item.name, baseUrl, reviewAt);
+          }
+        }
+      } catch (err) {
+        console.error("[paystack] post-order emails failed for order", order.id, err);
       }
     }
   }

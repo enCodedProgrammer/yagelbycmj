@@ -53,11 +53,12 @@ function OrderSuccessContent() {
           {/* Review nudge */}
           <div className="mb-8 border border-gold/20 bg-gold/5 px-6 py-5 text-left">
             <p className="text-sm text-gold font-medium mb-1 tracking-wide">
-              Love your fragrance?
+              What happens next?
             </p>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Check your email — we&rsquo;ve sent you a link to leave a review.
-              It takes 30 seconds and helps others discover their scent.
+              Your order confirmation is on its way to your inbox now. Once
+              you&rsquo;ve had a few days with your fragrance, we&rsquo;ll send a
+              link so you can leave a review and help others discover their scent.
             </p>
           </div>
 
