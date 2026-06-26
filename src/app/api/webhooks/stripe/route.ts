@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { createReviewToken } from "@/lib/reviews";
-import { sendOrderConfirmationEmail, sendReviewEmail } from "@/lib/emails";
+import { sendOrderConfirmationEmail, sendReviewEmail, sendAdminOrderNotificationEmail } from "@/lib/emails";
 
 export const dynamic = "force-dynamic";
 
@@ -99,19 +99,23 @@ export async function POST(req: NextRequest) {
     // here must NOT fail the webhook — a 5xx would make Stripe retry and the
     // idempotency guard above would skip it, so the order would silently never
     // get its emails. Log loudly and still return 200.
+    const emailItems = orderItems.map((i) => ({
+      name: i.product_name,
+      quantity: i.quantity,
+      unitPrice: i.unit_price,
+    }));
+    const emailTotal = (session.amount_total ?? 0) / 100;
+    const emailCurrency = (session.currency?.toUpperCase() ?? "GBP") as "GBP" | "USD" | "NGN";
+
     try {
       // 1. Order confirmation email — sent immediately.
       if (customerEmail) {
         await sendOrderConfirmationEmail({
           to: customerEmail,
           name: customerName,
-          items: orderItems.map((i) => ({
-            name: i.product_name,
-            quantity: i.quantity,
-            unitPrice: i.unit_price,
-          })),
-          total: (session.amount_total ?? 0) / 100,
-          currency: (session.currency?.toUpperCase() ?? "GBP") as "GBP" | "USD" | "NGN",
+          items: emailItems,
+          total: emailTotal,
+          currency: emailCurrency,
           address: meta.address ?? "",
           city: meta.city ?? "",
           postalCode: meta.postal_code ?? "",
@@ -121,7 +125,23 @@ export async function POST(req: NextRequest) {
         });
       }
 
-      // 2. Review request — scheduled for 3 days after purchase.
+      // 2. Admin notification — so the order can be processed/fulfilled.
+      await sendAdminOrderNotificationEmail({
+        to: customerEmail ?? "",
+        name: customerName,
+        items: emailItems,
+        total: emailTotal,
+        currency: emailCurrency,
+        address: meta.address ?? "",
+        city: meta.city ?? "",
+        postalCode: meta.postal_code ?? "",
+        country: meta.country ?? "",
+        countryCode: meta.country_code ?? "",
+        reference: session.id,
+        provider: "stripe",
+      });
+
+      // 3. Review request — scheduled for 3 days after purchase.
       const reviewAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
       for (const item of orderItems) {
         const token = await createReviewToken(

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { createReviewToken } from "@/lib/reviews";
-import { sendOrderConfirmationEmail, sendReviewEmail } from "@/lib/emails";
+import { sendOrderConfirmationEmail, sendReviewEmail, sendAdminOrderNotificationEmail } from "@/lib/emails";
 
 export const dynamic = "force-dynamic";
 
@@ -111,7 +111,27 @@ export async function POST(req: NextRequest) {
           });
         }
 
-        // 2. Review request — scheduled for 3 days after purchase.
+        // 2. Admin notification — so the order can be processed/fulfilled.
+        await sendAdminOrderNotificationEmail({
+          to: customerEmail ?? "",
+          name: customerName,
+          items: cartItems.map((i) => ({
+            name: i.name,
+            quantity: i.quantity,
+            unitPrice: i.unit_price,
+          })),
+          total: data.amount / 100,
+          currency: "NGN",
+          address: meta.address ?? "",
+          city: meta.city ?? "",
+          postalCode: meta.postal_code ?? "",
+          country: meta.country ?? "",
+          countryCode: meta.country_code ?? "",
+          reference: data.reference,
+          provider: "paystack",
+        });
+
+        // 3. Review request — scheduled for 3 days after purchase.
         const reviewAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
         for (const item of cartItems) {
           const token = await createReviewToken(

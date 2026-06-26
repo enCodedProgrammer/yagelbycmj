@@ -9,6 +9,7 @@ export interface EmailItem {
 }
 
 const FROM = process.env.RESEND_FROM_EMAIL ?? "hello@yagelbycmj.com";
+const ADMIN_EMAIL = process.env.ADMIN_NOTIFY_EMAIL ?? "thehouseofcmj@yagelbycmj.com";
 
 // Lazily create a Resend client. Returns null (and warns) when the API key is
 // missing so callers can no-op in environments where email isn't configured.
@@ -118,6 +119,88 @@ export async function sendOrderConfirmationEmail(args: OrderConfirmationArgs): P
     console.error("[emails] sendOrderConfirmationEmail failed:", result.error);
   } else {
     console.log("[emails] order confirmation sent to", to, "id:", result.data?.id);
+  }
+}
+
+export interface AdminOrderNotificationArgs extends OrderConfirmationArgs {
+  provider: string; // "stripe" | "paystack"
+}
+
+// Internal notification to the admin so they can process/fulfil the order.
+// Contains every detail: customer, contact, shipping address, items, total.
+// Sent for every order, regardless of country/provider.
+export async function sendAdminOrderNotificationEmail(args: AdminOrderNotificationArgs): Promise<void> {
+  const resend = await getResend();
+  if (!resend) return;
+
+  const {
+    to: customerEmail, name, items, total, currency,
+    address, city, postalCode, country, reference, provider,
+  } = args;
+
+  const rows = items
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding:8px 0;color:#f5f0e8;">${item.name} <span style="color:#777;">&times; ${item.quantity}</span></td>
+        <td style="padding:8px 0;text-align:right;color:#f5f0e8;">${formatPrice(item.unitPrice * item.quantity, currency)}</td>
+      </tr>`
+    )
+    .join("");
+
+  const html = shell(`
+    <h1 style="font-size:24px;font-weight:400;letter-spacing:0.05em;margin-bottom:8px;">
+      New order &mdash; action needed
+    </h1>
+    <p style="color:#aaa;line-height:1.7;margin-bottom:32px;">
+      A new order has been paid and is ready to process.
+    </p>
+
+    <p style="color:#c4a878;text-transform:uppercase;letter-spacing:0.15em;font-size:11px;margin-bottom:8px;">
+      Items
+    </p>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:8px;">
+      ${rows}
+      <tr>
+        <td style="padding:14px 0 0;border-top:1px solid #333;color:#c4a878;text-transform:uppercase;letter-spacing:0.15em;font-size:12px;">Total</td>
+        <td style="padding:14px 0 0;border-top:1px solid #333;text-align:right;color:#c4a878;font-size:16px;">${formatPrice(total, currency)}</td>
+      </tr>
+    </table>
+
+    <p style="color:#c4a878;text-transform:uppercase;letter-spacing:0.15em;font-size:11px;margin-top:32px;margin-bottom:8px;">
+      Customer
+    </p>
+    <p style="color:#aaa;line-height:1.7;margin:0;">
+      ${name}<br>
+      ${customerEmail}
+    </p>
+
+    <p style="color:#c4a878;text-transform:uppercase;letter-spacing:0.15em;font-size:11px;margin-top:32px;margin-bottom:8px;">
+      Ship to
+    </p>
+    <p style="color:#aaa;line-height:1.7;margin:0;">
+      ${address}<br>
+      ${city}${postalCode ? `, ${postalCode}` : ""}<br>
+      ${country}
+    </p>
+
+    <p style="color:#555;font-size:11px;margin-top:40px;line-height:1.6;">
+      Payment: ${provider} &middot; ${currency} ${formatPrice(total, currency)}<br>
+      Reference: ${reference}
+    </p>
+  `);
+
+  const result = await resend.emails.send({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    replyTo: customerEmail,
+    subject: `New order: ${name} — ${formatPrice(total, currency)}`,
+    html,
+  });
+  if (result.error) {
+    console.error("[emails] sendAdminOrderNotificationEmail failed:", result.error);
+  } else {
+    console.log("[emails] admin order notification sent to", ADMIN_EMAIL, "id:", result.data?.id);
   }
 }
 
