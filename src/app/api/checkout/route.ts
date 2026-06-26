@@ -21,6 +21,7 @@ export interface CheckoutBody {
   customer: {
     name: string;
     email: string;
+    phone: string;
     address: string;
     city: string;
     postalCode: string;
@@ -87,6 +88,7 @@ async function handleStripe(
     customer_email: customer.email,
     metadata: {
       customer_name: customer.name,
+      phone: customer.phone,
       address: customer.address,
       city: customer.city,
       postal_code: customer.postalCode,
@@ -125,6 +127,7 @@ async function handlePaystack(
       callback_url: `${baseUrl}/order/success`,
       metadata: {
         customer_name: customer.name,
+        phone: customer.phone,
         address: customer.address,
         city: customer.city,
         postal_code: customer.postalCode,

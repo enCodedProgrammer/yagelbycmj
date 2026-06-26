@@ -77,7 +77,7 @@ export async function sendOrderConfirmationEmail(args: OrderConfirmationArgs): P
     </h1>
     <p style="color:#aaa;line-height:1.7;margin-bottom:8px;">Dear ${name},</p>
     <p style="color:#aaa;line-height:1.7;margin-bottom:32px;">
-      Thank you for your order. We&rsquo;re preparing your fragrance with care&nbsp;&mdash; here&rsquo;s a summary of your purchase.
+      Thank you for your order. We&rsquo;re preparing your fragrance with care - here&rsquo;s a summary of your purchase.
     </p>
 
     <table style="width:100%;border-collapse:collapse;margin-bottom:8px;">
@@ -124,6 +124,7 @@ export async function sendOrderConfirmationEmail(args: OrderConfirmationArgs): P
 
 export interface AdminOrderNotificationArgs extends OrderConfirmationArgs {
   provider: string; // "stripe" | "paystack"
+  phone: string;
 }
 
 // Internal notification to the admin so they can process/fulfil the order.
@@ -135,7 +136,7 @@ export async function sendAdminOrderNotificationEmail(args: AdminOrderNotificati
 
   const {
     to: customerEmail, name, items, total, currency,
-    address, city, postalCode, country, reference, provider,
+    address, city, postalCode, country, reference, provider, phone,
   } = args;
 
   const rows = items
@@ -150,7 +151,7 @@ export async function sendAdminOrderNotificationEmail(args: AdminOrderNotificati
 
   const html = shell(`
     <h1 style="font-size:24px;font-weight:400;letter-spacing:0.05em;margin-bottom:8px;">
-      New order &mdash; action needed
+      New order - action needed
     </h1>
     <p style="color:#aaa;line-height:1.7;margin-bottom:32px;">
       A new order has been paid and is ready to process.
@@ -172,7 +173,7 @@ export async function sendAdminOrderNotificationEmail(args: AdminOrderNotificati
     </p>
     <p style="color:#aaa;line-height:1.7;margin:0;">
       ${name}<br>
-      ${customerEmail}
+      ${customerEmail}${phone ? `<br>${phone}` : ""}
     </p>
 
     <p style="color:#c4a878;text-transform:uppercase;letter-spacing:0.15em;font-size:11px;margin-top:32px;margin-bottom:8px;">
@@ -194,7 +195,7 @@ export async function sendAdminOrderNotificationEmail(args: AdminOrderNotificati
     from: FROM,
     to: ADMIN_EMAIL,
     replyTo: customerEmail,
-    subject: `New order: ${name} — ${formatPrice(total, currency)}`,
+    subject: `New order: ${name} - ${formatPrice(total, currency)}`,
     html,
   });
   if (result.error) {
@@ -227,7 +228,7 @@ export async function sendReviewEmail(
       Dear ${name},
     </p>
     <p style="color:#aaa;line-height:1.7;margin-bottom:32px;">
-      We hope you&rsquo;re enjoying your ${productName}. Your opinion means everything to us &mdash;
+      We hope you&rsquo;re enjoying your ${productName}. Your opinion means everything to us -
       a quick review takes 30 seconds and helps others discover their signature scent.
     </p>
     <a href="${link}"

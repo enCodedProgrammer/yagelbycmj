@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
       .insert({
         customer_name: meta.customer_name,
         email: session.customer_email,
+        phone: meta.phone,
         address: meta.address,
         city: meta.city,
         postal_code: meta.postal_code,
@@ -139,6 +140,7 @@ export async function POST(req: NextRequest) {
         countryCode: meta.country_code ?? "",
         reference: session.id,
         provider: "stripe",
+        phone: meta.phone ?? "",
       });
 
       // 3. Review request — scheduled for 3 days after purchase.

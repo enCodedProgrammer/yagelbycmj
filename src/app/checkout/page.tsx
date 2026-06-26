@@ -19,6 +19,7 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     address: "",
     city: "",
     postalCode: "",
@@ -84,6 +85,7 @@ export default function CheckoutPage() {
           customer: {
             name: formData.name,
             email: formData.email,
+            phone: formData.phone,
             address: formData.address,
             city: formData.city,
             postalCode: formData.postalCode,
@@ -190,6 +192,21 @@ export default function CheckoutPage() {
                   onChange={handleChange}
                   className={inputClass}
                   placeholder="your@email.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs tracking-[0.15em] uppercase text-muted-foreground mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  required
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={inputClass}
+                  placeholder="For delivery updates"
                 />
               </div>
 
