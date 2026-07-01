@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 
   let query = getSupabase()
     .from("reviews")
-    .select("id, product_id, product_name, reviewer_name, rating, comment, submitted_at")
+    .select("id, product_id, product_name, reviewer_name, rating, comment, location, submitted_at")
     .not("submitted_at", "is", null)
     .order("submitted_at", { ascending: false });
 

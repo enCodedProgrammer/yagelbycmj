@@ -49,6 +49,7 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <NavLink href="/collection">Collection</NavLink>
           <NavLink href="/#about">Our Story</NavLink>
+          <NavLink href="/reviews">Reviews</NavLink>
           <NavLink href="/shipping">Shipping</NavLink>
         </nav>
 
@@ -110,6 +111,12 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Our Story
+              </MobileNavLink>
+              <MobileNavLink
+                href="/reviews"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Reviews
               </MobileNavLink>
               <MobileNavLink
                 href="/shipping"

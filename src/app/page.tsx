@@ -13,10 +13,10 @@ export const revalidate = 300;
 async function getReviews(): Promise<Review[]> {
   const { data, error } = await getSupabase()
     .from("reviews")
-    .select("id, product_id, product_name, reviewer_name, rating, comment, submitted_at")
+    .select("id, product_id, product_name, reviewer_name, rating, comment, location, submitted_at")
     .not("submitted_at", "is", null)
     .order("submitted_at", { ascending: false })
-    .limit(6);
+    .limit(12);
   if (error) {
     console.error("[home] failed to load reviews:", error);
     return [];

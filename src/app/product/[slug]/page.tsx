@@ -15,6 +15,7 @@ interface Review {
   reviewer_name: string;
   rating: number;
   comment: string;
+  location?: string;
   submitted_at: string;
 }
 
@@ -30,15 +31,25 @@ function ReviewsSection({ productId }: { productId: string }) {
       .finally(() => setLoaded(true));
   }, [productId]);
 
-  const avg = reviews.length
-    ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10
+  const shown = reviews.slice(0, 12);
+
+  const avg = shown.length
+    ? Math.round((shown.reduce((s, r) => s + r.rating, 0) / shown.length) * 10) / 10
     : 0;
 
   return (
     <div className="mt-20 pt-16 border-t border-border/20">
-      <h2 className="font-heading text-2xl tracking-wide text-foreground mb-2">
-        Customer Reviews
-      </h2>
+      <div className="flex items-center justify-between gap-4 mb-2">
+        <h2 className="font-heading text-2xl tracking-wide text-foreground">
+          Customer Reviews
+        </h2>
+        <Link
+          href="/reviews"
+          className="text-xs tracking-[0.15em] uppercase text-gold/70 hover:text-gold transition-colors whitespace-nowrap"
+        >
+          View All →
+        </Link>
+      </div>
 
       {loaded && reviews.length === 0 && (
         <p className="text-muted-foreground text-sm mt-4">
@@ -61,14 +72,14 @@ function ReviewsSection({ productId }: { productId: string }) {
                 ))}
               </div>
               <p className="text-xs text-muted-foreground">
-                {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+                {shown.length} review{shown.length !== 1 ? "s" : ""}
               </p>
             </div>
           </div>
 
           {/* Review cards */}
           <div className="space-y-6">
-            {reviews.map((r) => (
+            {shown.map((r) => (
               <motion.div
                 key={r.id}
                 initial={{ opacity: 0, y: 16 }}
@@ -88,13 +99,18 @@ function ReviewsSection({ productId }: { productId: string }) {
                   <span className="text-sm font-medium text-foreground/80">
                     {r.reviewer_name || "Anonymous"}
                   </span>
+                  {r.location && (
+                    <span className="text-xs text-muted-foreground">
+                      · {r.location}
+                    </span>
+                  )}
                   <span className="text-xs text-muted-foreground ml-auto">
                     {new Date(r.submitted_at).toLocaleDateString("en-GB", {
                       year: "numeric", month: "short", day: "numeric",
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-foreground/60 leading-relaxed italic">
+                <p className="text-sm text-foreground/60 leading-relaxed italic whitespace-pre-line line-clamp-5">
                   &ldquo;{r.comment}&rdquo;
                 </p>
               </motion.div>

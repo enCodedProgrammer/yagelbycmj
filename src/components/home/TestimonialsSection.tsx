@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface Review {
@@ -10,6 +11,7 @@ export interface Review {
   reviewer_name: string;
   rating: number;
   comment: string;
+  location?: string;
   submitted_at: string;
 }
 
@@ -42,7 +44,7 @@ function TestimonialCard({
           <Star key={i} className="w-3.5 h-3.5 fill-gold text-gold" />
         ))}
       </div>
-      <p className="text-sm text-foreground/60 leading-relaxed mb-5 italic whitespace-pre-line">
+      <p className="text-sm text-foreground/60 leading-relaxed mb-5 italic whitespace-pre-line line-clamp-6">
         &ldquo;{text}&rdquo;
       </p>
       <div className="mt-auto pt-4 border-t border-border/20">
@@ -111,9 +113,9 @@ export default function TestimonialsSection({ reviews }: { reviews: Review[] }) 
   // Only show the section once at least one real review exists in Supabase.
   if (!reviews || reviews.length === 0) return null;
 
-  const cards = reviews.slice(0, 6).map((r) => ({
+  const cards = reviews.slice(0, 12).map((r) => ({
     name: r.reviewer_name || "Anonymous",
-    sub: r.product_name,
+    sub: r.location || r.product_name,
     rating: r.rating,
     text: r.comment,
   }));
@@ -190,6 +192,16 @@ export default function TestimonialsSection({ reviews }: { reviews: Review[] }) 
           ))}
         </div>
       )}
+
+      {/* View all */}
+      <div className="relative flex justify-center mt-10 md:mt-12 px-6">
+        <Link
+          href="/reviews"
+          className="text-sm tracking-[0.15em] uppercase text-gold/70 hover:text-gold transition-colors border-b border-gold/20 hover:border-gold/60 pb-1"
+        >
+          View All Reviews →
+        </Link>
+      </div>
     </section>
   );
 }
