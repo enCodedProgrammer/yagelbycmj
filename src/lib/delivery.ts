@@ -98,7 +98,7 @@ export interface LagosZone {
    {  
     id: "Island",
     label: "Island",
-    fee: 6000,
+    fee: 5500,
     areas: ["Victoria Island", "Oniru", "Marina", "Lekki Phase 1", "Lagos Island",  "Ikoyi", "Obalende", "Dolphin Estate", "Banana Island, Agungi", "Orchid Road", 
       "Lekki Peninsula 2", "Chevron", "Osapa London", "Jakande Lekki", "VGC", "Ikota", "Lekki Phase 2 Garden"],
   },

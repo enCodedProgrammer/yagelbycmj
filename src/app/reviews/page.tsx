@@ -61,7 +61,7 @@ export default async function ReviewsPage() {
                 key={r.id}
                 className="border border-border/30 bg-card/20 p-6 flex flex-col"
               >
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center justify-between gap-3 mb-1.5">
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5].map((s) => (
                       <Star
@@ -70,6 +70,13 @@ export default async function ReviewsPage() {
                       />
                     ))}
                   </div>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(r.submitted_at).toLocaleDateString("en-GB", {
+                      year: "numeric", month: "short", day: "numeric",
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5 mb-3">
                   <span className="text-sm font-medium text-foreground/80">
                     {r.reviewer_name || "Anonymous"}
                   </span>
@@ -78,11 +85,6 @@ export default async function ReviewsPage() {
                       · {r.location}
                     </span>
                   )}
-                  <span className="text-xs text-muted-foreground ml-auto">
-                    {new Date(r.submitted_at).toLocaleDateString("en-GB", {
-                      year: "numeric", month: "short", day: "numeric",
-                    })}
-                  </span>
                 </div>
                 <p className="text-sm text-foreground/60 leading-relaxed italic whitespace-pre-line">
                   &ldquo;{r.comment}&rdquo;
